@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.0.2] - 2019-06-19
+### Added
+- Docker configuration
+- Symfony skeleton
+
 ## [0.0.1] - 2019-06-18
 ### Added
 - README.md
