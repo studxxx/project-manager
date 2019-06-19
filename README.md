@@ -32,4 +32,4 @@ REGISTRY_ADDRESS=registry IMAGE_TAG=0 make build-production
 ## FAQ
 
 [CHANGELOG]: ./CHANGELOG.md
-[version-badge]: https://img.shields.io/badge/version-0.0.1-blue.svg
+[version-badge]: https://img.shields.io/badge/version-0.0.2-blue.svg
