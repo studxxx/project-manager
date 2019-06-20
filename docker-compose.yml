@@ -27,6 +27,17 @@ services:
       - composer:/root/.composer/cache
     environment:
       APP_DEBUG: 1
+  manager-postgres:
+    image: postgres:11.3-alpine
+    volumes:
+      - manager-postgres:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: app
+    ports:
+      - "54321:5432"
 
 volumes:
   composer:
+  manager-postgres:
