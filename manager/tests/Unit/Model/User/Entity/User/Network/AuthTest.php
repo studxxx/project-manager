@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Unit\Model\User\Entity\User\Network;
 
 use App\Model\User\Entity\User\Id;
@@ -11,11 +13,9 @@ class AuthTest extends TestCase
 {
     public function testSuccess(): void
     {
-        $user = new User(
+        $user = User::signUpByNetwork(
             Id::next(),
-            new \DateTimeImmutable()
-        );
-        $user->signUpByNetwork(
+            new \DateTimeImmutable(),
             $network = 'facebook',
             $identity = '000001'
         );
@@ -26,20 +26,5 @@ class AuthTest extends TestCase
         self::assertInstanceOf(Network::class, $first = reset($networks));
         self::assertEquals($network, $first->getNetwork());
         self::assertEquals($identity, $first->getIdentity());
-    }
-
-    public function testAlready(): void
-    {
-        $user = new User(
-            Id::next(),
-            new \DateTimeImmutable()
-        );
-        $user->signUpByNetwork(
-            $network = 'facebook',
-            $identity = '000001'
-        );
-
-        $this->expectExceptionMessage('User is already signed up.');
-        $user->signUpByNetwork($network, $identity);
     }
 }

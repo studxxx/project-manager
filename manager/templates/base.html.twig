@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" class="h-100">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -47,18 +47,18 @@
                     <li class="nav-item active">
                         <a href="{{ path('home') }}" class="nav-link">Home</a>
                     </li>
-                    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-                        <li class="nav-item">
-                            <a href="{{ path('post_index') }}" class="nav-link">Posts</a>
-                        </li>
-                    {% else %}
-                        <li class="nav-item">
-                            <a href="{{ path('app_register') }}" class="nav-link">Sign In</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ path('app_login') }}" class="nav-link">Log In</a>
-                        </li>
-                    {% endif %}
+{#                    {% if is_granted('IS_AUTHENTICATED_FULLY') %}#}
+{#                        <li class="nav-item">#}
+{#                            <a href="{{ path('post_index') }}" class="nav-link">Posts</a>#}
+{#                        </li>#}
+{#                    {% else %}#}
+{#                        <li class="nav-item">#}
+{#                            <a href="{{ path('app_register') }}" class="nav-link">Sign In</a>#}
+{#                        </li>#}
+{#                        <li class="nav-item">#}
+{#                            <a href="{{ path('app_login') }}" class="nav-link">Log In</a>#}
+{#                        </li>#}
+{#                    {% endif %}#}
                 </ul>
             </div>
         </div>
