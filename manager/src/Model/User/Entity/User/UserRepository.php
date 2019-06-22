@@ -8,6 +8,8 @@ interface UserRepository
 {
     public function findByResetToken(string $token): ?User;
     
+    public function get(Id $id): User;
+
     public function getByEmail(Email $email): User;
     
     public function hasByNetworkIdentity(string $network, string $identity): ?User;

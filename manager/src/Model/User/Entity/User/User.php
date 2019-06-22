@@ -29,11 +29,14 @@ class User
     private $networks;
     /** @var ResetToken|null */
     private $resetToken;
+    /** @var Role */
+    private $role;
 
     public function __construct(Id $id, DateTimeImmutable $date)
     {
         $this->id = $id;
         $this->date = $date;
+        $this->role = Role::user();
         $this->networks = new ArrayCollection();
     }
 
@@ -64,7 +67,7 @@ class User
         return $user;
     }
 
-    private function attachNetwork(string $network, string $identity): void
+    public function attachNetwork(string $network, string $identity): void
     {
         foreach ($this->networks as $existing) {
             if ($existing->isForNetwork($network)) {
@@ -98,6 +101,14 @@ class User
             throw new DomainException('Reset token is expired.');
         }
         $this->passwordHash = $hash;
+    }
+
+    public function changeRole(Role $role): void
+    {
+        if ($this->role->isEqual($role)) {
+            throw new DomainException('Role is already same.');
+        }
+        $this->role = $role;
     }
 
     public function isWait(): bool
@@ -156,5 +167,10 @@ class User
     public function getResetToken(): ?ResetToken
     {
         return $this->resetToken;
+    }
+
+    public function getRole(): Role
+    {
+        return $this->role;
     }
 }
