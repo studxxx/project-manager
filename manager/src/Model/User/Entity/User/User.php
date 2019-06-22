@@ -6,31 +6,68 @@ namespace App\Model\User\Entity\User;
 
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
 use DomainException;
 
+/**
+ * @ORM\Entity()
+ * @ORM\HasLifecycleCallbacks()
+ * @ORM\Table(name="user_users", uniqueConstraints={
+ *      @ORM\UniqueConstraint(columns={"email"}),
+ *      @ORM\UniqueConstraint(columns={"reset_token_token"}),
+ * })
+ */
 class User
 {
     private const STATUS_ACTIVE = 'active';
     private const STATUS_WAIT = 'wait';
 
-    /** @var Id */
+    /**
+     * @var Id
+     * @ORM\Column(type="user_user_id")
+     * @ORM\Id()
+     */
     private $id;
-    /** @var DateTimeImmutable */
+    /**
+     * @var DateTimeImmutable
+     * @ORM\Column(type="datetime_immutable")
+     */
     private $date;
-    /** @var Email */
+    /**
+     * @var Email
+     * @ORM\Column(type="user_user_email", nullable=true)
+     */
     private $email;
-    /** @var string */
+    /**
+     * @var string
+     * @ORM\Column(type="string", nullable=true, name="password_hash")
+     */
     private $passwordHash;
-    /** @var string */
+    /**
+     * @var string
+     * @ORM\Column(type="string", nullable=true, name="confirm_token")
+     */
     private $confirmToken;
-    /** @var string */
+    /**
+     * @var string
+     * @ORM\Column(type="string", length=16)
+     */
     private $status;
-    /** @var Network[]|ArrayCollection */
-    private $networks;
-    /** @var ResetToken|null */
-    private $resetToken;
-    /** @var Role */
+    /**
+     * @var Role
+     * @ORM\Column(type="user_user_role")
+     */
     private $role;
+    /**
+     * @var ResetToken|null
+     * @ORM\Embedded(class="ResetToken", columnPrefix="reset_token_")
+     */
+    private $resetToken;
+    /**
+     * @var Network[]|ArrayCollection
+     * @ORM\OneToMany(targetEntity="Network", mappedBy="user", orphanRemoval=true, cascade={"persist"})
+     */
+    private $networks;
 
     public function __construct(Id $id, DateTimeImmutable $date)
     {
@@ -156,14 +193,6 @@ class User
         return $this->confirmToken;
     }
 
-    /**
-     * @return Network[]
-     */
-    public function getNetworks(): array
-    {
-        return $this->networks->toArray();
-    }
-
     public function getResetToken(): ?ResetToken
     {
         return $this->resetToken;
@@ -172,5 +201,23 @@ class User
     public function getRole(): Role
     {
         return $this->role;
+    }
+
+    /**
+     * @return Network[]
+     */
+    public function getNetworks(): array
+    {
+        return $this->networks->toArray();
+    }
+
+    /**
+     * @ORM\PostLoad()
+     */
+    public function checkEmbeds(): void
+    {
+        if ($this->resetToken->isEmpty()) {
+            $this->resetToken = null;
+        }
     }
 }
