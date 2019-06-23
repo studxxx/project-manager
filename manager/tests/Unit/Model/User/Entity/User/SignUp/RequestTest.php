@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Unit\Model\User\Entity\User\SignUp;
 
 use App\Model\User\Entity\User\Email;
@@ -11,12 +13,9 @@ class RequestTest extends TestCase
 {
     public function testSuccess(): void
     {
-        $user = new User(
+        $user = User::signUpByEmail(
             $id = Id::next(),
-            $date = new \DateTimeImmutable()
-        );
-
-        $user->signUpByEmail(
+            $date = new \DateTimeImmutable(),
             $email = new Email('test@mail.com'),
             $hash = 'hash',
             $token = 'token'
@@ -30,5 +29,7 @@ class RequestTest extends TestCase
         self::assertEquals($email, $user->getEmail());
         self::assertEquals($hash, $user->getPasswordHash());
         self::assertEquals($token, $user->getConfirmToken());
+
+        self::assertTrue($user->getRole()->isUser());
     }
 }

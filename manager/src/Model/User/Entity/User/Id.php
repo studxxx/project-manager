@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Model\User\Entity\User;
 
 use Ramsey\Uuid\Uuid;
@@ -23,5 +25,10 @@ class Id
     public function getValue(): string
     {
         return $this->value;
+    }
+
+    public function __toString(): string
+    {
+        return $this->getValue();
     }
 }

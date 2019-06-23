@@ -44,6 +44,10 @@ class Handler
         $this->sender = $sender;
     }
 
+    /**
+     * @param Command $command
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
     public function handle(Command $command): void
     {
         $email = new Email($command->email);
@@ -52,13 +56,14 @@ class Handler
             throw new \DomainException('User already exist.');
         }
 
-        $user = new User(Id::next(), new \DateTimeImmutable());
-
-        $user->signUpByEmail(
+        $user = User::signUpByEmail(
+            Id::next(),
+            new \DateTimeImmutable(),
             $email,
             $this->hasher->hash($command->password),
             $token = $this->tokenizer->generate()
         );
+
         $this->users->add($user);
 
         $this->sender->send($email, $token);

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Model\User\UseCase\Network\Auth;
 
 use App\Model\User\Entity\User\Id;
@@ -27,17 +29,15 @@ class Handler
             throw new \DomainException('User already exists.');
         }
 
-        $user = new User(
+        $user = User::signUpByNetwork(
             Id::next(),
-            new \DateTimeImmutable()
-        );
-
-        $user->signUpByNetwork(
+            new \DateTimeImmutable(),
             $command->network,
             $command->identity
         );
 
         $this->users->add($user);
+
         $this->flusher->flush();
     }
 }
