@@ -19,8 +19,9 @@ use DomainException;
  */
 class User
 {
-    private const STATUS_ACTIVE = 'active';
-    private const STATUS_WAIT = 'wait';
+    public const STATUS_ACTIVE = 'active';
+    public const STATUS_BLOCKED = 'blocked';
+    public const STATUS_WAIT = 'wait';
 
     /**
      * @var Id
