@@ -1,6 +1,27 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.0.5] - 2019-06-23
+### Added
+- Roles to User domain
+- In the User domain initialized the db
+- Sign Up and Reset controllers
+- Auth controllers
+  - Login/logout process
+- SingUp, Reset, New Password Forms
+- UserRepository, UserFetcher, ResetTokenizerFactory, UserFetcher UserProvider UserIdentity LoginFormAuthenticator
+- html.twig pages
+- library "finesse/swiftmailer-defaults-plugin"
+- library "doctrine/doctrine-fixtures-bundle"
+- User admin fixtures
+### Updated
+- Makefile: load fixtures
+- Configured swift mailer  
+- Configured security
+### Fixed
+- architecture of the User domain
+- phpunit tests
+
 ## [0.0.4] - 2019-06-22
 ### Added
 - User domain model
