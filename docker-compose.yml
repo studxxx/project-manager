@@ -25,6 +25,9 @@ services:
     volumes:
       - ./manager:/app
       - composer:/root/.composer/cache
+    depends_on:
+      - manager-postgres
+      - mailer
     environment:
       APP_DEBUG: 1
   manager-postgres:
@@ -37,6 +40,17 @@ services:
       POSTGRES_DB: app
     ports:
       - "54321:5432"
+  manager-node-watch:
+    image: node:12.4-alpine
+    volumes:
+      - ./manager:/app
+    working_dir: /app
+    command: sh -c "until [ -f .ready ] ; do sleep 1 ; done && npm run watch"
+  manager-node:
+    image: node:12.4-alpine
+    volumes:
+      - ./manager:/app
+    working_dir: /app
   mailer:
     image: mailhog/mailhog
     ports:

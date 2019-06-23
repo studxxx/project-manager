@@ -22,8 +22,6 @@ final class Version20190622171941 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
-        $this->addSql('DROP SEQUENCE post_id_seq CASCADE');
-        $this->addSql('DROP SEQUENCE user_id_seq CASCADE');
         $this->addSql('CREATE TABLE user_user_networks (id UUID NOT NULL, user_id UUID NOT NULL, network VARCHAR(32) DEFAULT NULL, identity VARCHAR(32) DEFAULT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE INDEX IDX_D7BAFD7BA76ED395 ON user_user_networks (user_id)');
         $this->addSql('CREATE UNIQUE INDEX UNIQ_D7BAFD7B608487BC6A95E9C4 ON user_user_networks (network, identity)');
