@@ -44,6 +44,10 @@ class Handler
         $this->sender = $sender;
     }
 
+    /**
+     * @param Command $command
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
     public function handle(Command $command): void
     {
         $email = new Email($command->email);

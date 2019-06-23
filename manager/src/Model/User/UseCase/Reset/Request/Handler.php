@@ -7,6 +7,8 @@ use App\Model\User\Entity\User\UserRepository;
 use App\Model\User\Flusher;
 use App\Model\User\Service\ResetTokenizer;
 use App\Model\User\Service\ResetTokenSender;
+use DateTimeImmutable;
+use Doctrine\ORM\EntityNotFoundException;
 
 class Handler
 {
@@ -27,13 +29,17 @@ class Handler
         $this->sender = $sender;
     }
 
+    /**
+     * @param Command $command
+     * @throws EntityNotFoundException
+     */
     public function handle(Command $command): void
     {
         $user = $this->users->getByEmail(new Email($command->email));
 
         $user->requestPasswordReset(
             $this->tokenizer->generate(),
-            new \DateTimeImmutable()
+            new DateTimeImmutable()
         );
 
         $this->flusher->flush();
