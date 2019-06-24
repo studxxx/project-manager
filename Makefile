@@ -5,6 +5,7 @@ restart: docker-down docker-up
 init: docker-down-clear manager-clear docker-pull docker-build docker-up manager-init
 test: manager-test
 test-unit: manager-test-unit
+logs: docker-logs
 
 docker-ps:
 	docker-compose ps
@@ -23,6 +24,9 @@ docker-pull:
 
 docker-build:
 	docker-compose build
+
+docker-logs:
+	docker-compose logs -f
 
 manager-init: manager-composer-install manager-assets-install manager-wait-db manager-migrations manager-fixtures manager-ready
 

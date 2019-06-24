@@ -51,6 +51,11 @@ services:
     volumes:
       - ./manager:/app
     working_dir: /app
+  manager-redis:
+    image: redis:3.0-alpine
+    volumes:
+      - manager-redis:/data
+    command: redis-server --requirepass secret
   mailer:
     image: mailhog/mailhog
     ports:
@@ -59,3 +64,4 @@ services:
 volumes:
   composer:
   manager-postgres:
+  manager-redis:
