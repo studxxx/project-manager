@@ -9,9 +9,14 @@ use App\Model\User\Entity\User\Id;
 use App\Model\User\Entity\User\User;
 use App\Model\User\Entity\User\UserRepository;
 use App\Model\User\Flusher;
-use App\Model\User\Service\ConfirmTokenizer;
-use App\Model\User\Service\ConfirmTokenSender;
+use App\Model\User\Service\SignUpConfirmTokenizer;
+use App\Model\User\Service\SignUpConfirmTokenSender;
 use App\Model\User\Service\PasswordHasher;
+use DateTimeImmutable;
+use Doctrine\ORM\NonUniqueResultException;
+use DomainException;
+use Exception;
+use Twig\Error;
 
 class Handler
 {
@@ -22,19 +27,19 @@ class Handler
     /** @var Flusher */
     private $flusher;
     /**
-     * @var ConfirmTokenizer
+     * @var SignUpConfirmTokenizer
      */
     private $tokenizer;
     /**
-     * @var ConfirmTokenSender
+     * @var SignUpConfirmTokenSender
      */
     private $sender;
 
     public function __construct(
         UserRepository $users,
         PasswordHasher $hasher,
-        ConfirmTokenizer $tokenizer,
-        ConfirmTokenSender $sender,
+        SignUpConfirmTokenizer $tokenizer,
+        SignUpConfirmTokenSender $sender,
         Flusher $flusher
     ) {
         $this->users = $users;
@@ -46,19 +51,23 @@ class Handler
 
     /**
      * @param Command $command
-     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws Error\LoaderError
+     * @throws Error\RuntimeError
+     * @throws Error\SyntaxError
+     * @throws Exception
+     * @throws NonUniqueResultException
      */
     public function handle(Command $command): void
     {
         $email = new Email($command->email);
 
         if ($this->users->hasByEmail($email)) {
-            throw new \DomainException('User already exist.');
+            throw new DomainException('User already exist.');
         }
 
         $user = User::signUpByEmail(
             Id::next(),
-            new \DateTimeImmutable(),
+            new DateTimeImmutable(),
             $email,
             $this->hasher->hash($command->password),
             $token = $this->tokenizer->generate()

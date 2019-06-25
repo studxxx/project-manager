@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Model\User\Entity\User;
 
+use Exception;
 use Ramsey\Uuid\Uuid;
 use Webmozart\Assert\Assert;
 
@@ -17,6 +18,10 @@ class Id
         $this->value = $value;
     }
 
+    /**
+     * @return Id
+     * @throws Exception
+     */
     public static function next(): self
     {
         return new self(Uuid::uuid4()->toString());

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Model\User\Entity\User;
 
 use Doctrine\ORM\Mapping as ORM;
+use Exception;
 use Ramsey\Uuid\Uuid;
 
 /**
@@ -38,6 +39,12 @@ class Network
      */
     private $identity;
 
+    /**
+     * @param User $user
+     * @param string $network
+     * @param string $identity
+     * @throws Exception
+     */
     public function __construct(User $user, string $network, string $identity)
     {
         $this->id = Uuid::uuid4()->toString();
