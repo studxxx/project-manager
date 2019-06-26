@@ -8,6 +8,7 @@ use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use DomainException;
+use Exception;
 
 /**
  * @ORM\Entity()
@@ -49,6 +50,16 @@ class User
      * @ORM\Column(type="string", nullable=true, name="confirm_token")
      */
     private $confirmToken;
+    /**
+     * @var Email|null
+     * @ORM\Column(type="user_user_email", nullable=true, name="new_email")
+     */
+    private $newEmail;
+    /**
+     * @var string|null
+     * @ORM\Column(type="string", nullable=true, name="new_email_token")
+     */
+    private $newEmailToken;
     /**
      * @var string
      * @ORM\Column(type="string", length=16)
@@ -95,6 +106,14 @@ class User
         return $user;
     }
 
+    /**
+     * @param Id $id
+     * @param DateTimeImmutable $date
+     * @param string $network
+     * @param string $identity
+     * @return User
+     * @throws Exception
+     */
     public static function signUpByNetwork(Id $id, DateTimeImmutable $date, string $network, string $identity): User
     {
         $user = new self($id, $date);
@@ -105,6 +124,11 @@ class User
         return $user;
     }
 
+    /**
+     * @param string $network
+     * @param string $identity
+     * @throws Exception
+     */
     public function attachNetwork(string $network, string $identity): void
     {
         foreach ($this->networks as $existing) {
@@ -169,6 +193,31 @@ class User
         $this->confirmToken = null;
     }
 
+    public function requestEmailChanging(Email $email, string $token)
+    {
+        if (!$this->isActive()) {
+            throw new DomainException('User is not active.');
+        }
+        if ($this->email && $this->email->isEqual($email)) {
+            throw new DomainException('Email is already same.');
+        }
+        $this->newEmail = $email;
+        $this->newEmailToken = $token;
+    }
+
+    public function confirmEmailChanging(string $token)
+    {
+        if (!$this->newEmailToken) {
+            throw new DomainException('Changing is not requested.');
+        }
+        if ($this->newEmailToken !== $token) {
+            throw new DomainException('Incorrect changing token.');
+        }
+        $this->email = $this->newEmail;
+        $this->newEmail = null;
+        $this->newEmailToken = null;
+    }
+
     public function getId(): Id
     {
         return $this->id;
@@ -202,6 +251,16 @@ class User
     public function getRole(): Role
     {
         return $this->role;
+    }
+
+    public function getNewEmail(): ?Email
+    {
+        return $this->newEmail;
+    }
+
+    public function getNewEmailToken(): ?string
+    {
+        return $this->newEmailToken;
     }
 
     /**

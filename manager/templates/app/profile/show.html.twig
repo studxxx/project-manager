@@ -31,6 +31,9 @@
                     <th>Email</th>
                     <td>
                         {{ user.email }}
+                        <a href="{{ path('profile.email') }}" class="btn btn-sm btn-outline-primary">
+                            <span class="fa fa-pencil"></span>
+                        </a>
                     </td>
                 </tr>
                 {% endif %}
