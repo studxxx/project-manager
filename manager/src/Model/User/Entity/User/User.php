@@ -8,6 +8,7 @@ use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use DomainException;
+use Exception;
 
 /**
  * @ORM\Entity()
@@ -50,6 +51,21 @@ class User
      */
     private $confirmToken;
     /**
+     * @var Name
+     * @ORM\Embedded(class="Name")
+     */
+    private $name;
+    /**
+     * @var Email|null
+     * @ORM\Column(type="user_user_email", nullable=true, name="new_email")
+     */
+    private $newEmail;
+    /**
+     * @var string|null
+     * @ORM\Column(type="string", nullable=true, name="new_email_token")
+     */
+    private $newEmailToken;
+    /**
      * @var string
      * @ORM\Column(type="string", length=16)
      */
@@ -70,10 +86,11 @@ class User
      */
     private $networks;
 
-    public function __construct(Id $id, DateTimeImmutable $date)
+    public function __construct(Id $id, DateTimeImmutable $date, Name $name)
     {
         $this->id = $id;
         $this->date = $date;
+        $this->name = $name;
         $this->role = Role::user();
         $this->networks = new ArrayCollection();
     }
@@ -81,11 +98,12 @@ class User
     public static function signUpByEmail(
         Id $id,
         DateTimeImmutable $date,
+        Name $name,
         Email $email,
         string $hash,
         string $confirmToken
     ): User {
-        $user = new self($id, $date);
+        $user = new self($id, $date, $name);
 
         $user->email = $email;
         $user->passwordHash = $hash;
@@ -95,9 +113,23 @@ class User
         return $user;
     }
 
-    public static function signUpByNetwork(Id $id, DateTimeImmutable $date, string $network, string $identity): User
-    {
-        $user = new self($id, $date);
+    /**
+     * @param Id $id
+     * @param DateTimeImmutable $date
+     * @param Name $name
+     * @param string $network
+     * @param string $identity
+     * @return User
+     * @throws Exception
+     */
+    public static function signUpByNetwork(
+        Id $id,
+        DateTimeImmutable $date,
+        Name $name,
+        string $network,
+        string $identity
+    ): User {
+        $user = new self($id, $date, $name);
 
         $user->attachNetwork($network, $identity);
         $user->status = self::STATUS_ACTIVE;
@@ -105,6 +137,11 @@ class User
         return $user;
     }
 
+    /**
+     * @param string $network
+     * @param string $identity
+     * @throws Exception
+     */
     public function attachNetwork(string $network, string $identity): void
     {
         foreach ($this->networks as $existing) {
@@ -113,6 +150,20 @@ class User
             }
         }
         $this->networks->add(new Network($this, $network, $identity));
+    }
+
+    public function detachNetwork(string $network, string $identity): void
+    {
+        foreach ($this->networks as $existing) {
+            if ($existing->isFor($network, $identity)) {
+                if (!$this->email && $this->networks->count() === 1) {
+                    throw new DomainException('Unable to detach the last identity.');
+                }
+                $this->networks->removeElement($existing);
+                return;
+            }
+        }
+        throw new DomainException('Network is not attached.');
     }
 
     public function requestPasswordReset(ResetToken $token, DateTimeImmutable $date): void
@@ -141,6 +192,11 @@ class User
         $this->passwordHash = $hash;
     }
 
+    public function changeName(Name $name): void
+    {
+        $this->name = $name;
+    }
+
     public function changeRole(Role $role): void
     {
         if ($this->role->isEqual($role)) {
@@ -167,6 +223,31 @@ class User
 
         $this->status = self::STATUS_ACTIVE;
         $this->confirmToken = null;
+    }
+
+    public function requestEmailChanging(Email $email, string $token)
+    {
+        if (!$this->isActive()) {
+            throw new DomainException('User is not active.');
+        }
+        if ($this->email && $this->email->isEqual($email)) {
+            throw new DomainException('Email is already same.');
+        }
+        $this->newEmail = $email;
+        $this->newEmailToken = $token;
+    }
+
+    public function confirmEmailChanging(string $token)
+    {
+        if (!$this->newEmailToken) {
+            throw new DomainException('Changing is not requested.');
+        }
+        if ($this->newEmailToken !== $token) {
+            throw new DomainException('Incorrect changing token.');
+        }
+        $this->email = $this->newEmail;
+        $this->newEmail = null;
+        $this->newEmailToken = null;
     }
 
     public function getId(): Id
@@ -202,6 +283,21 @@ class User
     public function getRole(): Role
     {
         return $this->role;
+    }
+
+    public function getName(): Name
+    {
+        return $this->name;
+    }
+
+    public function getNewEmail(): ?Email
+    {
+        return $this->newEmail;
+    }
+
+    public function getNewEmailToken(): ?string
+    {
+        return $this->newEmailToken;
     }
 
     /**

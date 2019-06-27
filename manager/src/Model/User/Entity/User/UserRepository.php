@@ -6,12 +6,13 @@ namespace App\Model\User\Entity\User;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityNotFoundException;
+use Doctrine\ORM;
 
 class UserRepository
 {
     /** @var EntityManagerInterface */
     private $em;
-    /** @var \Doctrine\ORM\EntityRepository */
+    /** @var ORM\EntityRepository */
     private $repo;
 
     public function __construct(EntityManagerInterface $em)
@@ -68,7 +69,7 @@ class UserRepository
      * @param string $network
      * @param string $identity
      * @return bool
-     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws ORM\NonUniqueResultException
      */
     public function hasByNetworkIdentity(string $network, string $identity): bool
     {
@@ -85,7 +86,7 @@ class UserRepository
     /**
      * @param Email $email
      * @return bool
-     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws ORM\NonUniqueResultException
      */
     public function hasByEmail(Email $email): bool
     {
