@@ -35,6 +35,9 @@ REGISTRY_ADDRESS=registry IMAGE_TAG=0 make build-production
 
 ## Documentation
 
+### Theme
+[coreui/coreui](https://github.com/coreui/coreui-free-bootstrap-admin-template#installation)
+
 ## Run tests
 
 ### Run functional
@@ -44,4 +47,4 @@ REGISTRY_ADDRESS=registry IMAGE_TAG=0 make build-production
 ## FAQ
 
 [CHANGELOG]: ./CHANGELOG.md
-[version-badge]: https://img.shields.io/badge/version-0.0.5-blue.svg
+[version-badge]: https://img.shields.io/badge/version-0.0.6-blue.svg

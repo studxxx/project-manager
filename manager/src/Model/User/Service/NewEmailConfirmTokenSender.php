@@ -9,8 +9,9 @@ use RuntimeException;
 use Swift_Mailer;
 use Swift_Message;
 use Twig\Environment;
+use Twig\Error;
 
-class ConfirmTokenSender
+class NewEmailConfirmTokenSender
 {
     /** @var Swift_Mailer */
     private $mailer;
@@ -23,11 +24,18 @@ class ConfirmTokenSender
         $this->twig = $twig;
     }
 
-    public function send(Email$email, string $token): void
+    /**
+     * @param Email $email
+     * @param string $token
+     * @throws Error\LoaderError
+     * @throws Error\RuntimeError
+     * @throws Error\SyntaxError
+     */
+    public function send(Email $email, string $token): void
     {
-        $message = (new Swift_Message('Sign Up Confirmation'))
+        $message = (new Swift_Message('Email Confirmation'))
             ->setTo($email->getValue())
-            ->setBody($this->twig->render('mail/user/signup.html.twig', [
+            ->setBody($this->twig->render('mail/user/email.html.twig', [
                 'token' => $token,
             ]), 'text/html');
 

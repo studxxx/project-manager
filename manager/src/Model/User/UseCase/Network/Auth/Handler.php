@@ -5,9 +5,12 @@ declare(strict_types=1);
 namespace App\Model\User\UseCase\Network\Auth;
 
 use App\Model\User\Entity\User\Id;
+use App\Model\User\Entity\User\Name;
 use App\Model\User\Entity\User\User;
 use App\Model\User\Entity\User\UserRepository;
 use App\Model\User\Flusher;
+use Doctrine\ORM\NonUniqueResultException;
+use Exception;
 
 class Handler
 {
@@ -22,7 +25,11 @@ class Handler
         $this->flusher = $flusher;
     }
 
-
+    /**
+     * @param Command $command
+     * @throws NonUniqueResultException
+     * @throws Exception
+     */
     public function handle(Command $command): void
     {
         if ($this->users->hasByNetworkIdentity($command->network, $command->identity)) {
@@ -32,6 +39,10 @@ class Handler
         $user = User::signUpByNetwork(
             Id::next(),
             new \DateTimeImmutable(),
+            new Name(
+                $command->firstName,
+                $command->lastName
+            ),
             $command->network,
             $command->identity
         );

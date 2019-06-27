@@ -1,6 +1,21 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.0.6] - 2019-06-24
+### Added
+- libs "knpuniversity/oauth2-client-bundle", "league/oauth2-facebook", symfony lib encore, "predis/predis"
+- auth process via facebook
+- theme coreui
+- saving session via redis
+- console commands and added profile page
+- twig widgets status and role
+### Updated
+- theme into login, signup, reset pages
+- theme into base html of view
+- UserFetcher (added new methods)
+### Fixed
+- main menu
+
 ## [0.0.5] - 2019-06-23
 ### Added
 - Roles to User domain
