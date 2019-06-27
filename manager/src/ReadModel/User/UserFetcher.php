@@ -4,17 +4,22 @@ declare(strict_types=1);
 
 namespace App\ReadModel\User;
 
+use App\Model\User\Entity\User\User;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\FetchMode;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class UserFetcher
 {
     /** @var Connection */
     protected $connection;
+    private $repository;
 
-    public function __construct(Connection $connection)
+    public function __construct(Connection $connection, EntityManagerInterface $em)
     {
         $this->connection = $connection;
+        $this->repository = $em->getRepository(User::class);
     }
 
     public function existsByResetToken(string $token): bool
@@ -75,7 +80,7 @@ class UserFetcher
     public function findDetail(string $id): ?DetailView
     {
         $stmt = $this->connection->createQueryBuilder()
-            ->select('id', 'date', 'email', 'role', 'status')
+            ->select('id', 'date', 'name_first', 'name_last', 'email', 'role', 'status')
             ->from('user_users')
             ->where('id = :id')
             ->setParameter(':id', $id)
@@ -112,5 +117,13 @@ class UserFetcher
         $result = $stmt->fetch();
 
         return $result ?: null;
+    }
+
+    public function get($id): User
+    {
+        if (!$user = $this->repository->find($id)) {
+            throw new NotFoundHttpException('User is not found.');
+        }
+        return $user;
     }
 }

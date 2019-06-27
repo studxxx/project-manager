@@ -51,6 +51,11 @@ class User
      */
     private $confirmToken;
     /**
+     * @var Name
+     * @ORM\Embedded(class="Name")
+     */
+    private $name;
+    /**
      * @var Email|null
      * @ORM\Column(type="user_user_email", nullable=true, name="new_email")
      */
@@ -81,10 +86,11 @@ class User
      */
     private $networks;
 
-    public function __construct(Id $id, DateTimeImmutable $date)
+    public function __construct(Id $id, DateTimeImmutable $date, Name $name)
     {
         $this->id = $id;
         $this->date = $date;
+        $this->name = $name;
         $this->role = Role::user();
         $this->networks = new ArrayCollection();
     }
@@ -92,11 +98,12 @@ class User
     public static function signUpByEmail(
         Id $id,
         DateTimeImmutable $date,
+        Name $name,
         Email $email,
         string $hash,
         string $confirmToken
     ): User {
-        $user = new self($id, $date);
+        $user = new self($id, $date, $name);
 
         $user->email = $email;
         $user->passwordHash = $hash;
@@ -109,14 +116,20 @@ class User
     /**
      * @param Id $id
      * @param DateTimeImmutable $date
+     * @param Name $name
      * @param string $network
      * @param string $identity
      * @return User
      * @throws Exception
      */
-    public static function signUpByNetwork(Id $id, DateTimeImmutable $date, string $network, string $identity): User
-    {
-        $user = new self($id, $date);
+    public static function signUpByNetwork(
+        Id $id,
+        DateTimeImmutable $date,
+        Name $name,
+        string $network,
+        string $identity
+    ): User {
+        $user = new self($id, $date, $name);
 
         $user->attachNetwork($network, $identity);
         $user->status = self::STATUS_ACTIVE;
@@ -163,6 +176,11 @@ class User
             throw new DomainException('Reset token is expired.');
         }
         $this->passwordHash = $hash;
+    }
+
+    public function changeName(Name $name): void
+    {
+        $this->name = $name;
     }
 
     public function changeRole(Role $role): void
@@ -251,6 +269,11 @@ class User
     public function getRole(): Role
     {
         return $this->role;
+    }
+
+    public function getName(): Name
+    {
+        return $this->name;
     }
 
     public function getNewEmail(): ?Email

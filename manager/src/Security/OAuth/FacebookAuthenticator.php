@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Security\OAuth;
 
 use App\Model\User\UseCase\Network\Auth;
+use Doctrine\ORM\NonUniqueResultException;
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
 use KnpU\OAuth2ClientBundle\Client\OAuth2Client;
 use KnpU\OAuth2ClientBundle\Client\Provider\FacebookClient;
@@ -48,6 +49,12 @@ class FacebookAuthenticator extends SocialAuthenticator
         return $this->fetchAccessToken($this->getFacebookClient());
     }
 
+    /**
+     * @param mixed $credentials
+     * @param UserProviderInterface $userProvider
+     * @return UserInterface
+     * @throws NonUniqueResultException
+     */
     public function getUser($credentials, UserProviderInterface $userProvider): UserInterface
     {
         $facebookUser = $this->getFacebookClient()->fetchUserFromToken($credentials);
@@ -56,10 +63,14 @@ class FacebookAuthenticator extends SocialAuthenticator
         $id = $facebookUser->getId();
         $username = $network . ':' . $id;
 
+        $command = new Auth\Command($network, $id);
+        $command->firstName = $facebookUser->getFirstName();
+        $command->lastName = $facebookUser->getLastName();
+
         try {
             return $userProvider->loadUserByUsername($username);
         } catch (UsernameNotFoundException $e) {
-            $this->handler->handle(new Auth\Command($network, $id));
+            $this->handler->handle($command);
             return $userProvider->loadUserByUsername($username);
         }
     }

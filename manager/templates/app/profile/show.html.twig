@@ -17,6 +17,15 @@
             <table class="table table-bordered mb-0">
                 <tbody>
                 <tr>
+                    <th>Name</th>
+                    <td>
+                        {{ user.name_first }} {{ user.name_last }}
+                        <a href="{{ path('profile.name') }}" class="btn btn-sm btn-outline-primary">
+                            <span class="fa fa-pencil"></span>
+                        </a>
+                    </td>
+                </tr>
+                <tr>
                     <th>ID</th>
                     <td>
                         {{ user.id }}

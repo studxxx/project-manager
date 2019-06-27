@@ -6,6 +6,7 @@ namespace App\Model\User\UseCase\SignUp\Request;
 
 use App\Model\User\Entity\User\Email;
 use App\Model\User\Entity\User\Id;
+use App\Model\User\Entity\User\Name;
 use App\Model\User\Entity\User\User;
 use App\Model\User\Entity\User\UserRepository;
 use App\Model\User\Flusher;
@@ -68,6 +69,10 @@ class Handler
         $user = User::signUpByEmail(
             Id::next(),
             new DateTimeImmutable(),
+            new Name(
+                $command->firstName,
+                $command->lastName
+            ),
             $email,
             $this->hasher->hash($command->password),
             $token = $this->tokenizer->generate()
