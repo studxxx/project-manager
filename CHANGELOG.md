@@ -1,6 +1,19 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.0.7] - 2019-06-27
+### Added
+- Change email in profile
+- Auto login after confirm email of register new user
+- Attach to facebook in the profile
+- Show attached email in facebook profile
+- Full name to user profile
+- Showing full name instead facebookId and email
+- Detach user from social auth 
+### Updated
+- name classes from Confirm... to SignUpConfirm
+### Fixed
+
 ## [0.0.6] - 2019-06-24
 ### Added
 - libs "knpuniversity/oauth2-client-bundle", "league/oauth2-facebook", symfony lib encore, "predis/predis"
