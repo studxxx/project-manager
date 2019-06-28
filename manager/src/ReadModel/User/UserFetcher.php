@@ -87,7 +87,15 @@ class UserFetcher
     public function findDetail(string $id): ?DetailView
     {
         $stmt = $this->connection->createQueryBuilder()
-            ->select('id', 'date', 'name_first', 'name_last', 'email', 'role', 'status')
+            ->select(
+                'id',
+                'date',
+                'name_first first_name',
+                'name_last last_name',
+                'email',
+                'role',
+                'status'
+            )
             ->from('user_users')
             ->where('id = :id')
             ->setParameter(':id', $id)
@@ -132,5 +140,22 @@ class UserFetcher
             throw new NotFoundHttpException('User is not found.');
         }
         return $user;
+    }
+
+    public function all(): array
+    {
+        $stmt = $this->connection->createQueryBuilder()
+            ->select(
+                'id',
+                'date',
+                'TRIM(CONCAT(name_first, \' \', name_last)) AS name',
+                'email',
+                'role',
+                'status'
+            )
+            ->from('user_users')
+            ->orderBy('date', 'desc')
+            ->execute();
+        return $stmt->fetchAll(FetchMode::ASSOCIATIVE);
     }
 }

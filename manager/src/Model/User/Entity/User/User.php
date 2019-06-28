@@ -95,6 +95,23 @@ class User
         $this->networks = new ArrayCollection();
     }
 
+    public static function create(Id $id, DateTimeImmutable $date, Name $name, Email $email, string $hash): self
+    {
+        $user = new self($id, $date, $name);
+
+        $user->email = $email;
+        $user->passwordHash = $hash;
+        $user->status = self::STATUS_ACTIVE;
+
+        return $user;
+    }
+
+    public function edit(Email $email, Name $name)
+    {
+        $this->email = $email;
+        $this->name = $name;
+    }
+
     public static function signUpByEmail(
         Id $id,
         DateTimeImmutable $date,
@@ -215,6 +232,27 @@ class User
         return $this->status === self::STATUS_ACTIVE;
     }
 
+    public function isBlocked(): bool
+    {
+        return $this->status === self::STATUS_BLOCKED;
+    }
+
+    public function activate(): void
+    {
+        if ($this->isActive()) {
+            throw new DomainException('User is already active.');
+        }
+        $this->status = self::STATUS_ACTIVE;
+    }
+
+    public function block(): void
+    {
+        if ($this->isBlocked()) {
+            throw new DomainException('User is already blocked.');
+        }
+        $this->status = self::STATUS_BLOCKED;
+    }
+
     public function confirmSignUp()
     {
         if (!$this->isWait()) {
@@ -298,6 +336,11 @@ class User
     public function getNewEmailToken(): ?string
     {
         return $this->newEmailToken;
+    }
+
+    public function getStatus(): string
+    {
+        return $this->status;
     }
 
     /**
