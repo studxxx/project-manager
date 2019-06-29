@@ -26,6 +26,8 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class UsersController extends AbstractController
 {
+    private const PER_PAGE = 20;
+
     /** @var UserFetcher */
     private $users;
     /** @var LoggerInterface */
@@ -49,10 +51,16 @@ class UsersController extends AbstractController
         $form = $this->createForm(Filter\Form::class, $filter);
         $form->handleRequest($request);
 
-        $users = $fetcher->all($filter);
+        $users = $fetcher->all(
+            $filter,
+            $request->query->getInt('page', 1),
+            self::PER_PAGE,
+            $request->query->get('sort', 'date'),
+            $request->query->get('direction', 'desc'),
+        );
 
         return $this->render('app/users/index.html.twig', [
-            'users' => $users,
+            'pagination' => $users,
             'form' => $form->createView(),
         ]);
     }
