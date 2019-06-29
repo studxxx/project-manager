@@ -1,6 +1,19 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.0.8] - 2019-06-29
+### Added
+- Manage of users
+  - list users
+    - sorting of users
+    - filtering of users
+  - detail user
+  - create user
+  - edit user
+  - block/active user
+  - change role of user
+- lib knplabs/knp-paginator-bundle
+
 ## [0.0.7] - 2019-06-27
 ### Added
 - Change email in profile
