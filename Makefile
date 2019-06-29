@@ -6,6 +6,7 @@ init: docker-down-clear manager-clear docker-pull docker-build docker-up manager
 test: manager-test
 test-unit: manager-test-unit
 logs: docker-logs
+cache-clear: manager-cache-clear
 
 docker-ps:
 	docker-compose ps
@@ -48,6 +49,9 @@ manager-migrations:
 
 manager-fixtures:
 	docker-compose run --rm manager-php-cli ./bin/console doctrine:fixtures:load --no-interaction
+
+manager-cache-clear:
+	docker-compose run --rm manager-php-cli ./bin/console cache:clear
 
 manager-ready:
 	docker run --rm -v ${PWD}/manager:/app --workdir=/app alpine touch .ready

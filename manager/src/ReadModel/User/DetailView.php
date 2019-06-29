@@ -8,16 +8,16 @@ class DetailView
 {
     public $id;
     public $date;
-    public $name_first;
-    public $name_last;
+    public $first_name;
+    public $last_name;
     public $email;
     public $role;
     public $status;
     /** @var NetworkView[] */
     public $networks;
 
-    public function getFull()
+    public function getFull(): string
     {
-        return $this->name_first . ' ' . $this->name_last;
+        return $this->first_name . ' ' . $this->last_name;
     }
 }

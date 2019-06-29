@@ -25,4 +25,15 @@ class IdType extends GuidType
     {
         return self::NAME;
     }
+
+    /**
+     * The type "user_user_role" was implicitly marked as commented due to the configuration.
+     * This is deprecated and will be removed in DoctrineBundle 2.0. Either set the "commented" attribute
+     * in the configuration to "false" or mark the type as commented
+     * in "App\Model\User\Entity\User\IdType::requiresSQLCommentHint()."
+     */
+    public function requiresSQLCommentHint(AbstractPlatform $platform)
+    {
+        return true;
+    }
 }
