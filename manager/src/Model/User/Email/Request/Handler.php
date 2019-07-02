@@ -7,7 +7,7 @@ namespace App\Model\User\Email\Request;
 use App\Model\User\Entity\User\Email;
 use App\Model\User\Entity\User\Id;
 use App\Model\User\Entity\User\UserRepository;
-use App\Model\User\Flusher;
+use App\Model\Flusher;
 use App\Model\User\Service\NewEmailConfirmTokenizer;
 use App\Model\User\Service\NewEmailConfirmTokenSender;
 use Doctrine\ORM;
