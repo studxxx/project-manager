@@ -35,6 +35,19 @@ REGISTRY_ADDRESS=registry IMAGE_TAG=0 make build-production
 
 ## Documentation
 
+### Exclude autowiring
+
+```yaml
+services:
+  # makes classes in src/ available to be used as services
+  # this creates a service per class whose id is the fully-qualified class name
+  App\:
+    resource: '../src/*'
+    exclude: '../src/{DependencyInjection,Model/User/Entity,Migrations,Tests,Kernel.php}' # exclude Model/User/Entity
+
+  App\Model\User\Entity\User\UserRepository: ~ # include autowiring for Repository
+```
+
 ### Theme
 [coreui/coreui](https://github.com/coreui/coreui-free-bootstrap-admin-template#installation)
 

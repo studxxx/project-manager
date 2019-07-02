@@ -91,40 +91,6 @@ class UserFetcher
         return $result ?: null;
     }
 
-    public function findDetail(string $id): ?DetailView
-    {
-        $stmt = $this->connection->createQueryBuilder()
-            ->select(
-                'id',
-                'date',
-                'name_first first_name',
-                'name_last last_name',
-                'email',
-                'role',
-                'status'
-            )
-            ->from('user_users')
-            ->where('id = :id')
-            ->setParameter(':id', $id)
-            ->execute();
-
-        $stmt->setFetchMode(FetchMode::CUSTOM_OBJECT, DetailView::class);
-        /** @var DetailView $view */
-        $view = $stmt->fetch();
-
-        $stmt = $this->connection->createQueryBuilder()
-            ->select('network', 'identity')
-            ->from('user_user_networks')
-            ->where('user_id = :id')
-            ->setParameter(':id', $id)
-            ->execute();
-
-        $stmt->setFetchMode(FetchMode::CUSTOM_OBJECT, NetworkView::class);
-        $view->networks = $stmt->fetchAll();
-
-        return $view;
-    }
-
     public function findBySingUpConfirmToken(string $token): ?ShortView
     {
         $stmt = $this->connection->createQueryBuilder()
@@ -135,7 +101,7 @@ class UserFetcher
             ->execute();
 
         $stmt->setFetchMode(FetchMode::CUSTOM_OBJECT, ShortView::class);
-        /** @var DetailView $view */
+        /** @var ShortView $view */
         $result = $stmt->fetch();
 
         return $result ?: null;

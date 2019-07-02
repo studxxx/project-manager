@@ -16,13 +16,15 @@ use App\ReadModel\User\UserFetcher;
 use Doctrine\ORM;
 use DomainException;
 use Psr\Log\LoggerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/users")
+ * @Route("/users", name="users")
+ * @IsGranted("ROLE_MANAGE_USERS")
  */
 class UsersController extends AbstractController
 {
@@ -40,7 +42,7 @@ class UsersController extends AbstractController
     }
 
     /**
-     * @Route("", name="users")
+     * @Route("", name="")
      * @param Request $request
      * @param UserFetcher $fetcher
      * @return Response
@@ -66,7 +68,7 @@ class UsersController extends AbstractController
     }
 
     /**
-     * @Route("/create", name="users.create")
+     * @Route("/create", name=".create")
      * @param Request $request
      * @param Create\Handler $handler
      * @return Response
@@ -95,7 +97,7 @@ class UsersController extends AbstractController
     }
 
     /**
-     * @Route("/edit/{id}", name="users.edit")
+     * @Route("/edit/{id}", name=".edit")
      * @param User $user
      * @param Request $request
      * @param Edit\Handler $handler
@@ -103,6 +105,11 @@ class UsersController extends AbstractController
      */
     public function edit(User $user, Request $request, Edit\Handler $handler): Response
     {
+        if ($user->getId()->getValue() === $this->getUser()->getId()) {
+            $this->addFlash('error', 'Unable to change role for yourself.');
+            return $this->redirectToRoute('users.show', ['id' => $user->getId()]);
+        }
+
         $command = Edit\Command::fromUser($user);
         $form = $this->createForm(Edit\Form::class, $command);
         $form->handleRequest($request);
@@ -124,7 +131,7 @@ class UsersController extends AbstractController
     }
 
     /**
-     * @Route("/role/{id}", name="users.role")
+     * @Route("/role/{id}", name=".role")
      * @param User $user
      * @param Request $request
      * @param Role\Handler $handler
@@ -159,7 +166,7 @@ class UsersController extends AbstractController
     }
 
     /**
-     * @Route("/confirm/{id}", name="users.confirm")
+     * @Route("/confirm/{id}", name=".confirm")
      * @param User $user
      * @param Request $request
      * @param Confirm\Manual\Handler $handler
@@ -185,7 +192,7 @@ class UsersController extends AbstractController
     }
 
     /**
-     * @Route("/activate/{id}", name="users.activate")
+     * @Route("/activate/{id}", name=".activate")
      * @param User $user
      * @param Request $request
      * @param Activate\Handler $handler
@@ -211,7 +218,7 @@ class UsersController extends AbstractController
     }
 
     /**
-     * @Route("/block/{id}", name="users.block")
+     * @Route("/block/{id}", name=".block")
      * @param User $user
      * @param Request $request
      * @param Block\Handler $handler
@@ -242,7 +249,7 @@ class UsersController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="users.show")
+     * @Route("/{id}", name=".show")
      * @param User $user
      * @return Response
      */
