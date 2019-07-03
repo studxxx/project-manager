@@ -12,25 +12,30 @@ use Exception;
 
 class GroupsFixture extends Fixture
 {
+    public const REFERENCE_STAFF = 'work_member_group_staff';
+    public const REFERENCE_CUSTOMERS = 'work_member_group_customers';
+
     /**
      * @param ObjectManager $manager
      * @throws Exception
      */
     public function load(ObjectManager $manager)
     {
-        $group = new Group(
+        $staff = new Group(
             Id::next(),
             'Our staff'
         );
 
-        $manager->persist($group);
+        $manager->persist($staff);
+        $this->setReference(self::REFERENCE_STAFF, $staff);
 
-        $group = new Group(
+        $customer = new Group(
             Id::next(),
             'Customers'
         );
 
-        $manager->persist($group);
+        $manager->persist($customer);
+        $this->setReference(self::REFERENCE_CUSTOMERS, $customer);
 
         $manager->flush();
     }

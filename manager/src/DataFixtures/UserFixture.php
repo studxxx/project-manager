@@ -16,6 +16,9 @@ use Exception;
 
 class UserFixture extends Fixture
 {
+    public const REFERENCE_ADMIN = 'user_user_admin';
+    public const REFERENCE_USER = 'user_user_user';
+
     /** @var PasswordHasher */
     private $hasher;
 
@@ -52,6 +55,7 @@ class UserFixture extends Fixture
             $hash,
         );
         $manager->persist($confirmed);
+        $this->setReference(self::REFERENCE_USER, $confirmed);
 
         $admin = $this->createAdminByEmail(
             new Name('John', 'Doe'),
@@ -59,6 +63,7 @@ class UserFixture extends Fixture
             $hash,
         );
         $manager->persist($admin);
+        $this->setReference(self::REFERENCE_ADMIN, $admin);
 
         $manager->flush();
     }
