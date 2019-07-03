@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.1.0] - 2019-07-03
+### Added
+- Menu via KnpMenuBundle
+- Tab navigation and grouping a part of menu
+- Member
+- Group
+
 ## [0.0.8] - 2019-06-29
 ### Added
 - Manage of users
