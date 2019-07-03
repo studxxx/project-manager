@@ -6,7 +6,7 @@ namespace App\Model\User\UseCase\Network\Attach;
 
 use App\Model\User\Entity\User\Id;
 use App\Model\User\Entity\User\UserRepository;
-use App\Model\User\Flusher;
+use App\Model\Flusher;
 use Doctrine\ORM;
 use DomainException;
 use Exception;

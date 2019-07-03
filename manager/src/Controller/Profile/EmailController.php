@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller\Profile;
 
-use App\Model\User\Email;
+use App\Model\User\UseCase\Email;
 use Doctrine\ORM;
 use DomainException;
 use Psr\Log\LoggerInterface;

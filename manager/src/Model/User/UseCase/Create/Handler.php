@@ -9,7 +9,7 @@ use App\Model\User\Entity\User\Id;
 use App\Model\User\Entity\User\Name;
 use App\Model\User\Entity\User\User;
 use App\Model\User\Entity\User\UserRepository;
-use App\Model\User\Flusher;
+use App\Model\Flusher;
 use App\Model\User\Service\PasswordGenerator;
 use App\Model\User\Service\PasswordHasher;
 use DateTimeImmutable;
