@@ -35,7 +35,7 @@ class Command
         $this->id = $id;
     }
 
-    public function fromMember(Member $member): self
+    public static function fromMember(Member $member): self
     {
         $command = new self($member->getId()->getValue());
         $command->firstName = $member->getName()->getFirst();

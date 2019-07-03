@@ -20,7 +20,11 @@ class GroupFetcher
     public function all(): array
     {
         $stmt = $this->connection->createQueryBuilder()
-            ->select('g.id', 'g.name')
+            ->select(
+                'g.id',
+                'g.name',
+                '(SELECT COUNT(*) FROM work_members_members m WHERE m.group_id = g.id) as members'
+            )
             ->from('work_members_groups', 'g')
             ->orderBy('name')
             ->execute();

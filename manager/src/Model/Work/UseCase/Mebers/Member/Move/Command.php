@@ -28,5 +28,7 @@ class Command
     {
         $command = new self($member->getId()->getValue());
         $command->group = $member->getGroup()->getId()->getValue();
+
+        return $command;
     }
 }

@@ -86,12 +86,12 @@ class Member
 
     public function isActive(): bool
     {
-        $this->status->isActive();
+        return $this->status->isActive();
     }
 
     public function isArchived(): bool
     {
-        $this->status->isArchived();
+        return $this->status->isArchived();
     }
 
     public function getId(): Id

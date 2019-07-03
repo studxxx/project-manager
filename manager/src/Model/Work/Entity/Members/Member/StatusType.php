@@ -25,4 +25,9 @@ class StatusType extends StringType
     {
         return !empty($value) ? new Status($value) : null;
     }
+
+    public function requiresSQLCommentHint(AbstractPlatform $platform): bool
+    {
+        return true;
+    }
 }
