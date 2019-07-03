@@ -1,6 +1,15 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.1.1] - 2019-07-03
+### Added
+- references to MemberFixture
+- requirement to route work.members.show
+### Updated
+- fixtures
+- log type error to warning
+- composer libs
+
 ## [0.1.0] - 2019-07-03
 ### Added
 - Menu via KnpMenuBundle
