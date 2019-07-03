@@ -3,15 +3,16 @@
 namespace App\Model\Work\Entity\Members\Group;
 
 use App\Model\EntityNotFoundException;
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM;
 
 class GroupRepository
 {
-    /** @var EntityManagerInterface */
+    /** @var ORM\EntityManagerInterface */
     private $em;
+    /** @var ORM\EntityRepository */
     private $repository;
 
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(ORM\EntityManagerInterface $em)
     {
         $this->em = $em;
         $this->repository = $em->getRepository(Group::class);
