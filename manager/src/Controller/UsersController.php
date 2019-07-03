@@ -13,6 +13,7 @@ use App\Model\User\UseCase\Role;
 use App\Model\User\UseCase\SignUp\Confirm;
 use App\ReadModel\User\Filter;
 use App\ReadModel\User\UserFetcher;
+use App\ReadModel\Work\Members\Member\MemberFetcher;
 use Doctrine\ORM;
 use DomainException;
 use Psr\Log\LoggerInterface;
@@ -102,6 +103,7 @@ class UsersController extends AbstractController
      * @param Request $request
      * @param Edit\Handler $handler
      * @return Response
+     * @throws ORM\EntityNotFoundException
      */
     public function edit(User $user, Request $request, Edit\Handler $handler): Response
     {
@@ -251,10 +253,12 @@ class UsersController extends AbstractController
     /**
      * @Route("/{id}", name=".show")
      * @param User $user
+     * @param MemberFetcher $members
      * @return Response
      */
-    public function show(User $user): Response
+    public function show(User $user, MemberFetcher $members): Response
     {
-        return $this->render('app/users/show.html.twig', compact('user'));
+        $member = $members->find($user->getId()->getValue());
+        return $this->render('app/users/show.html.twig', compact('user', 'member'));
     }
 }

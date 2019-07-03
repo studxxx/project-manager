@@ -1,14 +1,14 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Groups{% endblock %}
+{% block title %}Members{% endblock %}
 
 {% block breadcrumbs %}
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{{ path('home') }}">Home</a></li>
         <li class="breadcrumb-item"><a href="{{ path('work') }}">Work</a></li>
         <li class="breadcrumb-item"><a href="{{ path('work.members') }}">Members</a></li>
-        <li class="breadcrumb-item"><a href="{{ path('work.members.groups') }}">Groups</a></li>
-        <li class="breadcrumb-item active">{{ group.name }}</li>
+        <li class="breadcrumb-item"><a href="{{ path('work.members.show', {'id': member.id}) }}">{{ member.name.full }}</a></li>
+        <li class="breadcrumb-item active">Edit</li>
     </ol>
 {% endblock %}
 
