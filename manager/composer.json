@@ -4,8 +4,8 @@
     "require": {
         "php": "^7.3",
         "ext-ctype": "*",
-        "ext-http": "*",
         "ext-iconv": "*",
+        "ext-pdo": "*",
         "finesse/swiftmailer-defaults-plugin": "^2.0",
         "knplabs/knp-menu-bundle": "^2.0",
         "knplabs/knp-paginator-bundle": "^4.0",

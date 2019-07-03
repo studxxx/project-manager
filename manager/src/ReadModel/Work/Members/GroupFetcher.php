@@ -6,6 +6,7 @@ namespace App\ReadModel\Work\Members;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\FetchMode;
+use PDO;
 
 class GroupFetcher
 {
@@ -40,6 +41,6 @@ class GroupFetcher
             ->orderBy('name')
             ->execute();
 
-        return array_column($stmt->fetchAll(FetchMode::ASSOCIATIVE), 'name', 'id');
+        return $stmt->fetchAll(PDO::FETCH_KEY_PAIR);
     }
 }

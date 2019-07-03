@@ -37,6 +37,9 @@ manager-clear:
 manager-composer-install:
 	docker-compose run --rm manager-php-cli composer install
 
+manager-composer-update:
+	docker-compose run --rm manager-php-cli composer update
+
 manager-assets-install:
 	docker-compose run --rm manager-node yarn install
 	docker-compose run --rm manager-node npm rebuild node-sass
