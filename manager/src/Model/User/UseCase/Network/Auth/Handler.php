@@ -8,8 +8,10 @@ use App\Model\User\Entity\User\Id;
 use App\Model\User\Entity\User\Name;
 use App\Model\User\Entity\User\User;
 use App\Model\User\Entity\User\UserRepository;
-use App\Model\User\Flusher;
+use App\Model\Flusher;
+use DateTimeImmutable;
 use Doctrine\ORM\NonUniqueResultException;
+use DomainException;
 use Exception;
 
 class Handler
@@ -33,12 +35,12 @@ class Handler
     public function handle(Command $command): void
     {
         if ($this->users->hasByNetworkIdentity($command->network, $command->identity)) {
-            throw new \DomainException('User already exists.');
+            throw new DomainException('User already exists.');
         }
 
         $user = User::signUpByNetwork(
             Id::next(),
-            new \DateTimeImmutable(),
+            new DateTimeImmutable(),
             new Name(
                 $command->firstName,
                 $command->lastName

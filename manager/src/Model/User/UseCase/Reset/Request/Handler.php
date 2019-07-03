@@ -4,11 +4,13 @@ namespace App\Model\User\UseCase\Reset\Request;
 
 use App\Model\User\Entity\User\Email;
 use App\Model\User\Entity\User\UserRepository;
-use App\Model\User\Flusher;
+use App\Model\Flusher;
 use App\Model\User\Service\ResetTokenizer;
 use App\Model\User\Service\ResetTokenSender;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityNotFoundException;
+use Exception;
+use Twig\Error;
 
 class Handler
 {
@@ -32,6 +34,10 @@ class Handler
     /**
      * @param Command $command
      * @throws EntityNotFoundException
+     * @throws Error\LoaderError
+     * @throws Error\RuntimeError
+     * @throws Error\SyntaxError
+     * @throws Exception
      */
     public function handle(Command $command): void
     {

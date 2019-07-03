@@ -7,7 +7,7 @@ namespace App\Model\User\UseCase\Name;
 use App\Model\User\Entity\User\Id;
 use App\Model\User\Entity\User\Name;
 use App\Model\User\Entity\User\UserRepository;
-use App\Model\User\Flusher;
+use App\Model\Flusher;
 use Doctrine\ORM\EntityNotFoundException;
 
 class Handler
