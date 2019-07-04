@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\DataFixtures\Work;
+namespace App\DataFixtures\Work\Members;
 
 use App\DataFixtures\UserFixture;
 use App\Model\User\Entity\User\User;
