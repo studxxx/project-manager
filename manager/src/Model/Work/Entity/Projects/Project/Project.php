@@ -50,7 +50,7 @@ class Project
 
     public function archive(): void
     {
-        if ($this->isArchive()) {
+        if ($this->isArchived()) {
             throw new \DomainException('Project is already archived.');
         }
         $this->status = Status::archived();
@@ -64,7 +64,7 @@ class Project
         $this->status = Status::active();
     }
 
-    public function isArchive(): bool
+    public function isArchived(): bool
     {
         return $this->status->isArchived();
     }

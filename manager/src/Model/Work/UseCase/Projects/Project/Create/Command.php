@@ -14,7 +14,7 @@ class Command
      */
     public $name;
     /**
-     * @var string
+     * @var int
      * @Assert\NotBlank()
      */
     public $sort;

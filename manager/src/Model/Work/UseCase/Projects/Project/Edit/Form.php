@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Model\Work\UseCase\Projects\Project\Edit;
 
-use App\Model\Work\UseCase\Projects\Project\Create\Command;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type;
 use Symfony\Component\Form\FormBuilderInterface;

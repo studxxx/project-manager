@@ -16,6 +16,6 @@ class HomeController extends AbstractController
      */
     public function index(): Response
     {
-        return $this->redirectToRoute('work.members.groups'); // TODO home dir is projects
+        return $this->redirectToRoute('work.projects'); // TODO home dir is projects
     }
 }
