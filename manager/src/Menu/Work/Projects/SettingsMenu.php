@@ -38,6 +38,18 @@ class SettingsMenu
                 ])
                 ->setAttribute('class', 'nav-item')
                 ->setLinkAttribute('class', 'nav-link');
+
+            $menu
+                ->addChild('Departments', [
+                    'route' => 'work.projects.project.settings.departments',
+                    'routeParameters' => ['project_id' => $options['project_id']],
+                ])
+                ->setExtra('routes', [
+                    ['route' => 'work.projects.project.settings.departments'],
+                    ['pattern' => '/^work.projects.project.settings.departments\..+/']
+                ])
+                ->setAttribute('class', 'nav-item')
+                ->setLinkAttribute('class', 'nav-link');
         }
 
         return $menu;
