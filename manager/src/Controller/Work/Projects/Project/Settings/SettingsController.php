@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Controller\Work\Projects\Project\Settigns;
+namespace App\Controller\Work\Projects\Project\Settings;
 
 use App\Annotation\Guid;
 use App\Model\Work\Entity\Projects\Project\Project;
@@ -12,6 +12,7 @@ use App\Model\Work\UseCase\Projects\Project\Reinstate;
 use App\Model\Work\UseCase\Projects\Project\Remove;
 use DomainException;
 use Psr\Log\LoggerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,6 +22,7 @@ use Symfony\Component\Routing\Annotation\Route;
 /**
  * @Route("/work/projects/{project_id}/settings", name="work.projects.project.settings")
  * @ParamConverter("project", options={"id"="project_id"})
+ * @IsGranted("ROLE_WORK_MANAGE_PROJECTS")
  */
 class SettingsController extends AbstractController
 {
@@ -65,6 +67,7 @@ class SettingsController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             try {
                 $handler->handle($command);
+                return $this->redirectToRoute('work.projects.project.show', ['project_id' => $project->getId()]);
             } catch (DomainException $e) {
                 $this->logger->warning($e->getMessage(), ['exception' => $e]);
                 $this->addFlash('error', $e->getMessage());
