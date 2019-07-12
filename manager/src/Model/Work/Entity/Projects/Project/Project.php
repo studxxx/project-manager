@@ -4,7 +4,11 @@ declare(strict_types=1);
 
 namespace App\Model\Work\Entity\Projects\Project;
 
+use App\Model\Work\Entity\Projects\Project\Department\Department;
+use App\Model\Work\Entity\Projects\Project\Department\Id as DepartmentId;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use DomainException;
 
 /**
  * @ORM\Entity()
@@ -33,6 +37,16 @@ class Project
      * @ORM\Column(type="work_projects_project_status")
      */
     private $status;
+    /**
+     * @var ArrayCollection|Department[]
+     * @ORM\OneToMany(
+     *     targetEntity="App\Model\Work\Entity\Projects\Project\Department\Department",
+     *     mappedBy="project",
+     *     orphanRemoval=true,
+     *     cascade={"all"}
+     * )
+     */
+    private $departments;
 
     public function __construct(Id $id, string $name, int $sort)
     {
@@ -40,6 +54,7 @@ class Project
         $this->name = $name;
         $this->sort = $sort;
         $this->status = Status::active();
+        $this->departments = new ArrayCollection();
     }
 
     public function edit(string $name, int $sort): void
@@ -51,7 +66,7 @@ class Project
     public function archive(): void
     {
         if ($this->isArchived()) {
-            throw new \DomainException('Project is already archived.');
+            throw new DomainException('Project is already archived.');
         }
         $this->status = Status::archived();
     }
@@ -59,9 +74,41 @@ class Project
     public function reinstate(): void
     {
         if ($this->isActive()) {
-            throw new \DomainException('Project is already active.');
+            throw new DomainException('Project is already active.');
         }
         $this->status = Status::active();
+    }
+
+    public function addDepartment(DepartmentId $id, string $name): void
+    {
+        foreach ($this->departments as $department) {
+            if ($department->isNameEqual($name)) {
+                throw new DomainException('Department is already exist.');
+            }
+        }
+        $this->departments->add(new Department($this, $id, $name));
+    }
+
+    public function editDepartment(DepartmentId $id, string $name): void
+    {
+        foreach ($this->departments as $current) {
+            if ($current->getId()->isEqual($id)) {
+                $current->edit($name);
+                return;
+            }
+        }
+        throw new DomainException('Department is not found.');
+    }
+
+    public function removeDepartment(DepartmentId $id): void
+    {
+        foreach ($this->departments as $department) {
+            if ($department->getId()->isEqual($id)) {
+                $this->departments->removeElement($department);
+                return;
+            }
+        }
+        throw new DomainException('Department is not found.');
     }
 
     public function isArchived(): bool
@@ -92,5 +139,20 @@ class Project
     public function getStatus(): Status
     {
         return $this->status;
+    }
+
+    public function getDepartments()
+    {
+        return $this->departments->toArray();
+    }
+
+    public function getDepartment(DepartmentId $id): Department
+    {
+        foreach ($this->departments as $department) {
+            if ($department->getId()->isEqual($id)) {
+                return $department;
+            }
+        }
+        throw new DomainException('Department is not found.');
     }
 }
