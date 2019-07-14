@@ -6,7 +6,7 @@ namespace App\Controller\Work\Projects;
 
 use App\Model\Work\UseCase\Projects\Project\Create;
 use App\ReadModel\Work\Projects\Project\Filter;
-use App\ReadModel\Work\Projects\ProjectFetcher;
+use App\ReadModel\Work\Projects\Project\ProjectFetcher;
 use Exception;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

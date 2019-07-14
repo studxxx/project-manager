@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\ReadModel\Work\Projects;
+namespace App\ReadModel\Work\Projects\Project;
 
 use App\ReadModel\Work\Projects\Project\Filter\Filter;
 use Doctrine\DBAL\Connection;

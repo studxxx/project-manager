@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Model\Work\Entity\Projects\Role;
 
 use App\Model\EntityNotFoundException;
-use App\Model\Work\Entity\Projects\Project\Project;
 use Doctrine\ORM;
 
 class RoleRepository
@@ -18,7 +17,7 @@ class RoleRepository
     public function __construct(ORM\EntityManagerInterface $em)
     {
         $this->em = $em;
-        $this->repository = $em->getRepository(Project::class);
+        $this->repository = $em->getRepository(Role::class);
     }
 
     /**
