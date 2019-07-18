@@ -17,7 +17,10 @@ use Doctrine\Common\Persistence\ObjectManager;
 
 class MemberFixture extends Fixture implements DependentFixtureInterface
 {
-    public function load(ObjectManager $manager)
+    public const REFERENCE_ADMIN = 'work_member_admin';
+    public const REFERENCE_USER = 'work_member_user';
+
+    public function load(ObjectManager $manager): void
     {
         /**
          * @var User $admin
@@ -28,16 +31,18 @@ class MemberFixture extends Fixture implements DependentFixtureInterface
 
         /**
          * @var Group $staff
-         * @var Group $customer
+         * @var Group $customers
          */
-        $staff = $this->getReference(GroupsFixture::REFERENCE_STAFF);
-        $customer = $this->getReference(GroupsFixture::REFERENCE_CUSTOMERS);
+        $staff = $this->getReference(GroupFixture::REFERENCE_STAFF);
+        $customers = $this->getReference(GroupFixture::REFERENCE_CUSTOMERS);
 
         $member = $this->createMember($admin, $staff);
         $manager->persist($member);
+        $this->setReference(self::REFERENCE_ADMIN, $member);
 
-        $member = $this->createMember($user, $customer);
+        $member = $this->createMember($user, $customers);
         $manager->persist($member);
+        $this->setReference(self::REFERENCE_USER, $member);
 
         $manager->flush();
     }
@@ -46,7 +51,7 @@ class MemberFixture extends Fixture implements DependentFixtureInterface
     {
         return [
             UserFixture::class,
-            GroupsFixture::class,
+            GroupFixture::class,
         ];
     }
 
