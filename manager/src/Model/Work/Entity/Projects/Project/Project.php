@@ -114,7 +114,7 @@ class Project
         foreach ($this->departments as $department) {
             if ($department->getId()->isEqual($id)) {
                 foreach ($this->memberships as $membership) {
-                    if ($membership->isForDepartment($department)) {
+                    if ($membership->isForDepartment($id)) {
                         throw new DomainException('Unable to remove department with members.');
                     }
                 }
