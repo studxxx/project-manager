@@ -10,7 +10,7 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Exception;
 
-class GroupsFixture extends Fixture
+class GroupFixture extends Fixture
 {
     public const REFERENCE_STAFF = 'work_member_group_staff';
     public const REFERENCE_CUSTOMERS = 'work_member_group_customers';
