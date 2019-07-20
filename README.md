@@ -60,4 +60,4 @@ services:
 ## FAQ
 
 [CHANGELOG]: ./CHANGELOG.md
-[version-badge]: https://img.shields.io/badge/version-0.1.1-blue.svg
+[version-badge]: https://img.shields.io/badge/version-0.2.0-blue.svg
