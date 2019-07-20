@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.2.0] - 2019-07-20
+### Added
+- Project entity
+- Department entity
+- Role entity
+- Membership entity
+
 ## [0.1.1] - 2019-07-03
 ### Added
 - references to MemberFixture
