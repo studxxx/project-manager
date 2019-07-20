@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.2.1] - 2019-07-20
+### Fixed
+- Unit tests
+
 ## [0.2.0] - 2019-07-20
 ### Added
 - Project entity
