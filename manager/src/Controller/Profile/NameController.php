@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Controller\Profile;
 
+use App\Controller\ErrorHandler;
 use App\Model\User\UseCase\Name;
 use App\ReadModel\User\UserFetcher;
 use Doctrine\ORM\EntityNotFoundException;
 use DomainException;
-use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,13 +21,13 @@ class NameController extends AbstractController
 {
     /** @var UserFetcher */
     private $users;
-    /** @var LoggerInterface */
-    private $logger;
+    /** @var ErrorHandler */
+    private $errors;
 
-    public function __construct(UserFetcher $users, LoggerInterface $logger)
+    public function __construct(UserFetcher $users, ErrorHandler $errors)
     {
         $this->users = $users;
-        $this->logger = $logger;
+        $this->errors = $errors;
     }
 
     /**
@@ -51,7 +51,7 @@ class NameController extends AbstractController
                 $handler->handle($command);
                 $this->redirectToRoute('profile');
             } catch (DomainException $e) {
-                $this->logger->warning($e->getMessage(), ['exception' => $e]);
+                $this->errors->handle($e);
                 $this->addFlash('error', $e->getMessage());
             }
         }

@@ -16,7 +16,6 @@ use App\ReadModel\User\UserFetcher;
 use App\ReadModel\Work\Members\Member\MemberFetcher;
 use Doctrine\ORM;
 use DomainException;
-use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -33,13 +32,13 @@ class UsersController extends AbstractController
 
     /** @var UserFetcher */
     private $users;
-    /** @var LoggerInterface */
-    private $logger;
+    /** @var ErrorHandler */
+    private $errors;
 
-    public function __construct(LoggerInterface $logger, UserFetcher $users)
+    public function __construct(UserFetcher $users, ErrorHandler $errors)
     {
         $this->users = $users;
-        $this->logger = $logger;
+        $this->errors = $errors;
     }
 
     /**
@@ -87,7 +86,7 @@ class UsersController extends AbstractController
                 $handler->handle($command);
                 return $this->redirectToRoute('users');
             } catch (DomainException $e) {
-                $this->logger->warning($e->getMessage(), ['exception' => $e]);
+                $this->errors->handle($e);
                 $this->addFlash('error', $e->getMessage());
             }
         }
@@ -121,7 +120,7 @@ class UsersController extends AbstractController
                 $handler->handle($command);
                 return $this->redirectToRoute('users.show', ['id' => $user->getId()]);
             } catch (DomainException $e) {
-                $this->logger->warning($e->getMessage(), ['exception' => $e]);
+                $this->errors->handle($e);
                 $this->addFlash('error', $e->getMessage());
             }
         }
@@ -156,7 +155,7 @@ class UsersController extends AbstractController
                 $handler->handle($command);
                 return $this->redirectToRoute('users.show', ['id' => $user->getId()]);
             } catch (DomainException $e) {
-                $this->logger->warning($e->getMessage(), ['exception' => $e]);
+                $this->errors->handle($e);
                 $this->addFlash('error', $e->getMessage());
             }
         }
@@ -186,7 +185,7 @@ class UsersController extends AbstractController
         try {
             $handler->handle($command);
         } catch (DomainException $e) {
-            $this->logger->warning($e->getMessage(), ['exception' => $e]);
+            $this->errors->handle($e);
             $this->addFlash('error', $e->getMessage());
         }
 
@@ -212,7 +211,7 @@ class UsersController extends AbstractController
         try {
             $handler->handle($command);
         } catch (DomainException $e) {
-            $this->logger->warning($e->getMessage(), ['exception' => $e]);
+            $this->errors->handle($e);
             $this->addFlash('error', $e->getMessage());
         }
 
@@ -243,7 +242,7 @@ class UsersController extends AbstractController
         try {
             $handler->handle($command);
         } catch (DomainException $e) {
-            $this->logger->warning($e->getMessage(), ['exception' => $e]);
+            $this->errors->handle($e);
             $this->addFlash('error', $e->getMessage());
         }
 
