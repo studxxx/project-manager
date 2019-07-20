@@ -10,6 +10,7 @@ use App\Model\Work\UseCase\Projects\Project\Archive;
 use App\Model\Work\UseCase\Projects\Project\Edit;
 use App\Model\Work\UseCase\Projects\Project\Reinstate;
 use App\Model\Work\UseCase\Projects\Project\Remove;
+use App\Security\Voter\Work\Projects\ProjectAccess;
 use DomainException;
 use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -41,7 +42,7 @@ class SettingsController extends AbstractController
      */
     public function show(Project $project): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_WORK_MANAGE_PROJECTS');
+        $this->denyAccessUnlessGranted(ProjectAccess::EDIT, $project);
 
         return $this->render('app/work/projects/project/settings/show.html.twig', [
             'project' => $project,
@@ -57,7 +58,7 @@ class SettingsController extends AbstractController
      */
     public function edit(Project $project, Request $request, Edit\Handler $handler): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_WORK_MANAGE_PROJECTS');
+        $this->denyAccessUnlessGranted(ProjectAccess::EDIT, $project);
 
         $command = Edit\Command::fromProject($project);
 
@@ -93,7 +94,7 @@ class SettingsController extends AbstractController
             return $this->redirectToRoute('work.projects.project.settings', ['project_id' => $project->getId()]);
         }
 
-        $this->denyAccessUnlessGranted('ROLE_WORK_MANAGE_PROJECTS');
+        $this->denyAccessUnlessGranted(ProjectAccess::EDIT, $project);
 
         $command = new Archive\Command($project->getId()->getValue());
 
@@ -120,7 +121,7 @@ class SettingsController extends AbstractController
             return $this->redirectToRoute('work.projects.project.settings', ['project_id' => $project->getId()]);
         }
 
-        $this->denyAccessUnlessGranted('ROLE_WORK_MANAGE_PROJECTS');
+        $this->denyAccessUnlessGranted(ProjectAccess::EDIT, $project);
 
         $command = new Reinstate\Command($project->getId()->getValue());
 
@@ -147,7 +148,7 @@ class SettingsController extends AbstractController
             return $this->redirectToRoute('work.projects.project.settings', ['project_id' => $project->getId()]);
         }
 
-        $this->denyAccessUnlessGranted('ROLE_WORK_MANAGE_PROJECTS');
+        $this->denyAccessUnlessGranted(ProjectAccess::EDIT, $project);
 
         $command = new Remove\Command($project->getId()->getValue());
 

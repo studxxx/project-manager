@@ -7,10 +7,10 @@ namespace App\Controller\Work\Projects\Project\Settings;
 use App\Annotation\Guid;
 use App\Model\Work\Entity\Members\Member\Id;
 use App\Model\Work\Entity\Projects\Project\Project;
+use App\Security\Voter\Work\Projects\ProjectAccess;
 use DomainException;
 use Exception;
 use Psr\Log\LoggerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,7 +21,6 @@ use App\Model\Work\UseCase\Projects\Project\Membership;
 /**
  * @Route("/work/projects/{project_id}/settings/members", name="work.projects.project.settings.members")
  * @ParamConverter("project", options={"id" = "project_id"})
- * @IsGranted("ROLE_WORK_MANAGE_PROJECTS")
  */
 class MembersController extends AbstractController
 {
@@ -40,6 +39,8 @@ class MembersController extends AbstractController
      */
     public function index(Project $project): Response
     {
+        $this->denyAccessUnlessGranted(ProjectAccess::MANAGE_MEMBERS, $project);
+
         return $this->render('app/work/projects/project/settings/members/index.html.twig', [
             'project' => $project,
             'memberships' => $project->getMemberships()
@@ -56,6 +57,8 @@ class MembersController extends AbstractController
      */
     public function assign(Project $project, Request $request, Membership\Add\Handler $handler): Response
     {
+        $this->denyAccessUnlessGranted(ProjectAccess::MANAGE_MEMBERS, $project);
+
         if (!$project->getDepartments()) {
             $this->addFlash('error', 'Add departments before adding members.');
             return $this->redirectToRoute('work.projects.project.settings.members', [
@@ -100,6 +103,8 @@ class MembersController extends AbstractController
         Request $request,
         Membership\Edit\Handler $handler
     ): Response {
+        $this->denyAccessUnlessGranted(ProjectAccess::MANAGE_MEMBERS, $project);
+
         $membership = $project->getMembership(new Id($member_id));
 
         $command = Membership\Edit\Command::fromMembership($project, $membership);
@@ -140,6 +145,8 @@ class MembersController extends AbstractController
         Request $request,
         Membership\Remove\Handler $handler
     ): Response {
+        $this->denyAccessUnlessGranted(ProjectAccess::MANAGE_MEMBERS, $project);
+
         if (!$this->isCsrfTokenValid('revoke', $request->request->get('token'))) {
             return $this->redirectToRoute('work.projects.project.settings.members', [
                 'project_id' => $project->getId()
