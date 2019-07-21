@@ -9,7 +9,7 @@ use Webmozart\Assert\Assert;
 
 class Id
 {
-    /** @var string */
+    /** @var int */
     private $value;
 
     public function __construct(int $value)
@@ -19,13 +19,13 @@ class Id
         $this->value = $value;
     }
 
-    public function getValue(): string
+    public function getValue(): int
     {
         return $this->value;
     }
 
     public function __toString(): string
     {
-        return $this->getValue();
+        return (string)$this->getValue();
     }
 }

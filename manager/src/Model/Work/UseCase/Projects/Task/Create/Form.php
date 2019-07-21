@@ -42,5 +42,4 @@ class Form extends AbstractType
             'data_class' => Command::class
         ]);
     }
-
 }
