@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Model\Work\Entity\Projects\Task;
 
 use Doctrine\DBAL\Platforms\AbstractPlatform;
-use Doctrine\DBAL\Types\GuidType;
+use Doctrine\DBAL\Types\IntegerType;
 
-class IdType extends GuidType
+class IdType extends IntegerType
 {
     public const NAME = 'work_projects_tasks_id';
 

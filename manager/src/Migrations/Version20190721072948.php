@@ -22,7 +22,7 @@ final class Version20190721072948 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
-        $this->addSql('CREATE TABLE work_projects_tasks (id UUID NOT NULL, project_id UUID NOT NULL, author_id UUID NOT NULL, parent_id UUID DEFAULT NULL, date TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, name VARCHAR(255) NOT NULL, content TEXT DEFAULT NULL, type VARCHAR(16) NOT NULL, progress SMALLINT NOT NULL, priority SMALLINT NOT NULL, plan_date TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, status VARCHAR(16) NOT NULL, start_date TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, end_date TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE TABLE work_projects_tasks (id INT NOT NULL, project_id UUID NOT NULL, author_id UUID NOT NULL, parent_id INT DEFAULT NULL, date TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, plan_date DATE DEFAULT NULL, start_date DATE DEFAULT NULL, end_date DATE DEFAULT NULL, name VARCHAR(255) NOT NULL, content TEXT DEFAULT NULL, type VARCHAR(16) NOT NULL, progress SMALLINT NOT NULL, priority SMALLINT NOT NULL, status VARCHAR(16) NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE INDEX IDX_E42D1865166D1F9C ON work_projects_tasks (project_id)');
         $this->addSql('CREATE INDEX IDX_E42D1865F675F31B ON work_projects_tasks (author_id)');
         $this->addSql('CREATE INDEX IDX_E42D1865727ACA70 ON work_projects_tasks (parent_id)');
@@ -32,12 +32,12 @@ final class Version20190721072948 extends AbstractMigration
         $this->addSql('COMMENT ON COLUMN work_projects_tasks.author_id IS \'(DC2Type:work_members_member_id)\'');
         $this->addSql('COMMENT ON COLUMN work_projects_tasks.parent_id IS \'(DC2Type:work_projects_tasks_id)\'');
         $this->addSql('COMMENT ON COLUMN work_projects_tasks.date IS \'(DC2Type:datetime_immutable)\'');
+        $this->addSql('COMMENT ON COLUMN work_projects_tasks.plan_date IS \'(DC2Type:date_immutable)\'');
+        $this->addSql('COMMENT ON COLUMN work_projects_tasks.start_date IS \'(DC2Type:date_immutable)\'');
+        $this->addSql('COMMENT ON COLUMN work_projects_tasks.end_date IS \'(DC2Type:date_immutable)\'');
         $this->addSql('COMMENT ON COLUMN work_projects_tasks.type IS \'(DC2Type:work_projects_tasks_type)\'');
-        $this->addSql('COMMENT ON COLUMN work_projects_tasks.plan_date IS \'(DC2Type:datetime_immutable)\'');
         $this->addSql('COMMENT ON COLUMN work_projects_tasks.status IS \'(DC2Type:work_projects_tasks_status)\'');
-        $this->addSql('COMMENT ON COLUMN work_projects_tasks.start_date IS \'(DC2Type:datetime_immutable)\'');
-        $this->addSql('COMMENT ON COLUMN work_projects_tasks.end_date IS \'(DC2Type:datetime_immutable)\'');
-        $this->addSql('CREATE TABLE work_projects_tasks_executors (task_id UUID NOT NULL, member_id UUID NOT NULL, PRIMARY KEY(task_id, member_id))');
+        $this->addSql('CREATE TABLE work_projects_tasks_executors (task_id INT NOT NULL, member_id UUID NOT NULL, PRIMARY KEY(task_id, member_id))');
         $this->addSql('CREATE INDEX IDX_6291D08E8DB60186 ON work_projects_tasks_executors (task_id)');
         $this->addSql('CREATE INDEX IDX_6291D08E7597D3FE ON work_projects_tasks_executors (member_id)');
         $this->addSql('COMMENT ON COLUMN work_projects_tasks_executors.task_id IS \'(DC2Type:work_projects_tasks_id)\'');
