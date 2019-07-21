@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Model\Work\UseCase\Projects\Task\Edit;
+namespace App\Model\Work\UseCase\Projects\Task\Progress;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type;
@@ -14,8 +14,13 @@ class Form extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('name', Type\TextType::class)
-            ->add('content', Type\TextareaType::class, ['required' => false, 'attr' => ['rows' => 10]]);
+            ->add('progress', Type\ChoiceType::class, ['choices' => [
+                0 => 0,
+                25 => 25,
+                50 => 50,
+                75 => 75,
+                100 => 100,
+            ], 'attr' => ['onchange' => 'this.form.submit()']]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
@@ -23,5 +28,10 @@ class Form extends AbstractType
         $resolver->setDefaults([
             'data_class' => Command::class
         ]);
+    }
+
+    public function getBlockPrefix(): string
+    {
+        return 'progress';
     }
 }

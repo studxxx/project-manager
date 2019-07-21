@@ -56,4 +56,9 @@ class TaskRepository
     {
         return $this->repository->findBy(['parent' => $id->getValue()]);
     }
+
+    public function remove(Task $task): void
+    {
+        $this->em->remove($task);
+    }
 }

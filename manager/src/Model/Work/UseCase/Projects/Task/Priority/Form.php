@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Model\Work\UseCase\Projects\Task\Edit;
+namespace App\Model\Work\UseCase\Projects\Task\Priority;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type;
@@ -14,8 +14,12 @@ class Form extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('name', Type\TextType::class)
-            ->add('content', Type\TextareaType::class, ['required' => false, 'attr' => ['rows' => 10]]);
+            ->add('priority', Type\ChoiceType::class, ['choices' => [
+                'Low' => 1,
+                'Normal' => 2,
+                'High' => 3,
+                'Extra' => 4,
+            ], 'attr' => ['onchange' => 'this.form.submit()']]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
@@ -23,5 +27,10 @@ class Form extends AbstractType
         $resolver->setDefaults([
             'data_class' => Command::class
         ]);
+    }
+
+    public function getBlockPrefix(): string
+    {
+        return 'priority';
     }
 }
