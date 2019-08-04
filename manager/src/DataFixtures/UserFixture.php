@@ -10,6 +10,7 @@ use App\Model\User\Entity\User\Name;
 use App\Model\User\Entity\User\Role;
 use App\Model\User\Entity\User\User;
 use App\Model\User\Service\PasswordHasher;
+use DateTimeImmutable;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Exception;
@@ -44,14 +45,14 @@ class UserFixture extends Fixture
 
         $requested = $this->createSignUpRequestedByEmail(
             new Name('Brad', 'Pitt'),
-            new Email('requested@app.test'),
+            new Email('requested@demo.com'),
             $hash,
         );
         $manager->persist($requested);
 
         $confirmed = $this->createSignUpConfirmedByEmail(
             new Name('Mike', 'Woo'),
-            new Email('user@app.test'),
+            new Email('user@demo.com'),
             $hash,
         );
         $manager->persist($confirmed);
@@ -59,7 +60,7 @@ class UserFixture extends Fixture
 
         $admin = $this->createAdminByEmail(
             new Name('John', 'Doe'),
-            new Email('admin@app.test'),
+            new Email('admin@demo.com'),
             $hash,
         );
         $manager->persist($admin);
@@ -106,7 +107,7 @@ class UserFixture extends Fixture
      */
     private function createSignUpRequestedByEmail(Name $name, Email $email, string $hash): User
     {
-        return User::signUpByEmail(Id::next(), new \DateTimeImmutable(), $name, $email, $hash, 'token');
+        return User::signUpByEmail(Id::next(), new DateTimeImmutable(), $name, $email, $hash, 'token');
     }
 
     /**
@@ -118,6 +119,6 @@ class UserFixture extends Fixture
      */
     private function createSignedUpByNetwork(Name $name, string $network, string $identity): User
     {
-        return User::signUpByNetwork(Id::next(), new \DateTimeImmutable(), $name, $network, $identity);
+        return User::signUpByNetwork(Id::next(), new DateTimeImmutable(), $name, $network, $identity);
     }
 }
