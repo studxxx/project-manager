@@ -1,6 +1,14 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.3.1] - 2019-08-04
+### Fixed
+- Changelog
+
+## [0.3.0] - 2019-08-04
+### Added
+- Tasks
+
 ## [0.2.1] - 2019-07-20
 ### Fixed
 - Unit tests
