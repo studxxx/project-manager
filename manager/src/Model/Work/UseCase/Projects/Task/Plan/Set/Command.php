@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Model\Work\UseCase\Projects\Task\Plan\Set;
 
+use App\Model\Work\Entity\Projects\Task\Task;
 use DateTimeImmutable;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -23,5 +24,13 @@ class Command
     public function __construct(int $id)
     {
         $this->id = $id;
+    }
+
+    public static function fromTask(Task $task)
+    {
+        $command = new self($task->getId()->getValue());
+        $command->date = $task->getPlanDate() ?: new DateTimeImmutable();
+
+        return $command;
     }
 }

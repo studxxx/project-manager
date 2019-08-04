@@ -38,6 +38,20 @@ class ProjectMenu
             ->setAttribute('class', 'nav-item')
             ->setLinkAttribute('class', 'nav-link');
 
+        $menu
+            ->addChild('Tasks', [
+                'route' => 'work.projects.project.tasks',
+                'routeParameters' => ['project_id' => $options['project_id']]
+            ])
+            ->setExtra('routes', [
+                ['route' => 'work.projects.project.tasks'],
+                ['pattern' => '/^work.projects.project.tasks\..+/']
+            ])
+            ->setAttribute('class', 'nav-item')
+            ->setLinkAttribute('class', 'nav-link');
+
+        // TODO Calendar menu
+
         if ($this->auth->isGranted('ROLE_WORK_MANAGE_PROJECTS')) {
             $menu
                 ->addChild('Settings', [
