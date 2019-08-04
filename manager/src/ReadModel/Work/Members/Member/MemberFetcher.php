@@ -42,7 +42,10 @@ class MemberFetcher
                 'TRIM(CONCAT(m.name_first, \' \', m.name_last)) AS name',
                 'm.email',
                 'g.name as group',
-                'm.status'
+                'm.status',
+                '(
+                    SELECT COUNT(*) FROM work_projects_project_memberships ms WHERE ms.member_id = m.id
+                ) AS memberships_count'
             )
             ->from('work_members_members', 'm')
             ->innerJoin('m', 'work_members_groups', 'g', 'm.group_id = g.id');
@@ -101,6 +104,26 @@ class MemberFetcher
             ->setParameter(':status', Status::ACTIVE)
             ->orderBy('g.name')
             ->addOrderBy('name')
+            ->execute();
+        return $stmt->fetchAll(FetchMode::ASSOCIATIVE);
+    }
+
+    public function activeDepartmentListForProject(string $project): array
+    {
+        $stmt = $this->connection->createQueryBuilder()
+            ->select([
+                'm.id',
+                'CONCAT(m.name_first, \' \', m.name_last) AS name',
+                'd.name AS department'
+            ])
+            ->from('work_members_members', 'm')
+            ->innerJoin('m', 'work_projects_project_memberships', 'ms', 'ms.member_id = m.id')
+            ->innerJoin('ms', 'work_projects_project_membership_departments', 'msd', 'msd.membership_id = ms.id')
+            ->innerJoin('msd', 'work_projects_project_departments', 'd', 'd.id = msd.department_id')
+            ->andWhere('m.status = :status AND ms.project_id = :project')
+            ->setParameter(':status', Status::ACTIVE)
+            ->setParameter(':project', $project)
+            ->orderBy('d.name')->addOrderBy('name')
             ->execute();
         return $stmt->fetchAll(FetchMode::ASSOCIATIVE);
     }
