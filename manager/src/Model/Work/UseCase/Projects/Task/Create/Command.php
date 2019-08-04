@@ -40,10 +40,11 @@ class Command
      */
     public $priority;
     /**
-     * @var string
+     * @var NameRow[]
      * @Assert\NotBlank()
+     * @Assert\Valid()
      */
-    public $name;
+    public $names;
     /**
      * @var string
      */
