@@ -1,13 +1,32 @@
+############################
+## Docker
+############################
 state: docker-ps
 up: docker-up
 down: docker-down
 restart: docker-down docker-up
 init: docker-down-clear manager-clear docker-pull docker-build docker-up manager-init
+
+############################
+## Update
+############################
+update: manager-composer-update
+
+############################
+## Test
+############################
 test: manager-test
 test-unit: manager-test-unit
+test-functional: manager-test-functional
+
+############################
+## Log
+############################
 logs: docker-logs
+
 cache-clear: manager-cache-clear
 
+############################
 docker-ps:
 	docker-compose ps
 
@@ -67,6 +86,9 @@ manager-test:
 
 manager-test-unit:
 	docker-compose run --rm manager-php-cli php bin/phpunit --testsuite=unit
+
+manager-test-functional:
+	docker-compose run --rm manager-php-cli php bin/phpunit --testsuite=functional
 
 build-production:
 	docker build --pull --file=manager/docker/production/nginx.docker --tag ${REGISTRY_ADDRESS}/manager-nginx:${IMAGE_TAG} manager
