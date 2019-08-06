@@ -8,6 +8,7 @@
         "ext-json": "*",
         "ext-pdo": "*",
         "cebe/markdown": "^1.2",
+        "exercise/htmlpurifier-bundle": "^2.0",
         "finesse/swiftmailer-defaults-plugin": "^2.0",
         "knplabs/knp-menu-bundle": "^2.0",
         "knplabs/knp-paginator-bundle": "^4.0",
