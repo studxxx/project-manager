@@ -86,5 +86,5 @@ services:
     resource: '../src/Twig/Extension/Work/Processor/Driver/*Driver.php'
     tags: ['app.twig.work_processor.driver']
 
-  App\Twig\Extension\Work\Processor\ProcessorExtension:
-    arguments: [!tagged app.twig.work_processor.driver]
+#  App\Twig\Extension\Work\Processor\ProcessorExtension:
+#    arguments: [!tagged app.twig.work_processor.driver]
