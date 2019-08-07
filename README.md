@@ -59,5 +59,17 @@ services:
 
 ## FAQ
 
+### How to config logs
+```yaml
+vesion: '3'
+services:
+  manager-php-fpm:
+    volumes:
+      - manager-php-fpm-logs:/app/var/log
+
+volumes:
+  manager-php-fpm-logs:
+```
+
 [CHANGELOG]: ./CHANGELOG.md
-[version-badge]: https://img.shields.io/badge/version-0.3.2-blue.svg
+[version-badge]: https://img.shields.io/badge/version-0.3.4-blue.svg
