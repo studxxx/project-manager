@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.3.4] - 2019-08-07
+### Updated
+- Config log for production
+### Removed
+- ProcessorCompilerPass
+
+
 ## [0.3.2] - 2019-08-07
 ### Added
 - text decorators
