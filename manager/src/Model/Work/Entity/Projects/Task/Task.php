@@ -67,7 +67,7 @@ class Task
      *     orphanRemoval=true,
      *     cascade={"all"}
      * )
-     * @ORM\OrderBy({"date" = "ASC")
+     * @ORM\OrderBy({"date" = "ASC"})
      */
     private $files;
     /**
