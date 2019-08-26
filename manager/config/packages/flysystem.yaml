@@ -12,6 +12,6 @@ flysystem:
         port: 21
 #        root: '/path/to/root'
         passive: false
-        ssl: true
+        ssl: false
         timeout: 30
         ignore_passive_address: ~
