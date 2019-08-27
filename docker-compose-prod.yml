@@ -13,14 +13,24 @@ services:
     environment:
       APP_SECRET: ${MANAGER_APP_SECRET}
       DATABASE_URL: pgsql://app:${MANAGER_DB_PASSWORD}@manager-postgres:5432/app
+      REDIS_URL: tcp://manager-redis:6379?password=${MANAGER_REDIS_PASSWORD}
       MAILER_URL: null://localhost
+      OAUTH_FACEBOOK_SECRET: ${MANAGER_OAUTH_FACEBOOK_SECRET}
+      STORAGE_FTP_HOST: ${STORAGE_FTP_HOST}
+      STORAGE_FTP_USERNAME: ${STORAGE_FTP_USERNAME}
+      STORAGE_FTP_PASSWORD: ${STORAGE_FTP_PASSWORD}
   manager-php-cli:
     image: ${REGISTRY_ADDRESS}/manager-php-cli:${IMAGE_TAG}
     restart: always
     environment:
       APP_SECRET: ${MANAGER_APP_SECRET}
       DATABASE_URL: pgsql://app:${MANAGER_DB_PASSWORD}@manager-postgres:5432/app
+      REDIS_URL: tcp://manager-redis:6379?password=${MANAGER_REDIS_PASSWORD}
       MAILER_URL: null://localhost
+      OAUTH_FACEBOOK_SECRET: ${MANAGER_OAUTH_FACEBOOK_SECRET}
+      STORAGE_FTP_HOST: ${STORAGE_FTP_HOST}
+      STORAGE_FTP_USERNAME: ${STORAGE_FTP_USERNAME}
+      STORAGE_FTP_PASSWORD: ${STORAGE_FTP_PASSWORD}
   manager-postgres:
     image: ${REGISTRY_ADDRESS}/manager-postgres:${IMAGE_TAG}
     restart: always
