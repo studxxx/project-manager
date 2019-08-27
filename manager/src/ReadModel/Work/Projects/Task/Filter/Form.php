@@ -62,7 +62,7 @@ class Form extends AbstractType
             ->add('executor', Type\ChoiceType::class, [
                 'choices' => $members,
                 'required' => false,
-                'placeholder' => 'All authors',
+                'placeholder' => 'All executors',
                 'attr' => ['onchange' => 'this.form.submit()']
             ])
             ->add('roots', Type\ChoiceType::class, ['choices' => [
