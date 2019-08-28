@@ -40,7 +40,10 @@ class MainMenu
             ->setAttribute('class', 'nav-item')
             ->setLinkAttribute('class', 'nav-link');
 
-        // TODO Calendar
+        $menu
+            ->addChild('Calendar', ['route' => 'work.projects.calendar'])
+            ->setAttribute('class', 'nav-item')
+            ->setLinkAttribute('class', 'nav-link');
 
         if ($this->auth->isGranted('ROLE_WORK_MANAGE_PROJECTS')) {
             $menu
