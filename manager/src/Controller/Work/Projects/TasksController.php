@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace App\Controller\Work\Projects;
 
 use App\Controller\ErrorHandler;
+use App\Model\Comment\UseCase\Comment;
 use App\Model\Work\Entity\Members\Member\Member;
 use App\Model\Work\Entity\Projects\Task\Task;
 use App\Model\Work\UseCase\Projects\Task\ChildOf;
 use App\Model\Work\UseCase\Projects\Task\Edit;
 use App\Model\Work\UseCase\Projects\Task\Executor;
+use App\Model\Work\UseCase\Projects\Task\Files;
 use App\Model\Work\UseCase\Projects\Task\Move;
 use App\Model\Work\UseCase\Projects\Task\Plan;
 use App\Model\Work\UseCase\Projects\Task\Priority;
@@ -21,10 +23,13 @@ use App\Model\Work\UseCase\Projects\Task\Take;
 use App\Model\Work\UseCase\Projects\Task\TakeAndStart;
 use App\Model\Work\UseCase\Projects\Task\Type;
 use App\ReadModel\Work\Members\Member\MemberFetcher;
+use App\ReadModel\Work\Projects\Task\CommentFetcher;
 use App\ReadModel\Work\Projects\Task\Filter;
 use App\ReadModel\Work\Projects\Task\TaskFetcher;
 use App\Security\Voter\Work\Projects\TaskAccess;
+use App\Service\Uploader\FileUploader;
 use DomainException;
+use League\Flysystem\FileExistsException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -171,6 +176,80 @@ class TasksController extends AbstractController
             'task' => $task,
             'form' => $form->createView(),
         ]);
+    }
+
+    /**
+     * @Route("/{id}/files", name=".files")
+     * @param Task $task
+     * @param Request $request
+     * @param Files\Add\Handler $handler
+     * @param FileUploader $uploader
+     * @return Response
+     * @throws FileExistsException
+     */
+    public function files(Task $task, Request $request, Files\Add\Handler $handler, FileUploader $uploader): Response
+    {
+        $this->denyAccessUnlessGranted(TaskAccess::MANAGE, $task);
+
+        $command = new Files\Add\Command($task->getId()->getValue(), $this->getUser()->getId());
+
+        $form = $this->createForm(Files\Add\Form::class, $command);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $files = [];
+            foreach ($form->get('files')->getData() as $file) {
+                $uploaded = $uploader->upload($file);
+                $files[] = new Files\Add\File(
+                    $uploaded->getPath(),
+                    $uploaded->getName(),
+                    $uploaded->getSize()
+                );
+            }
+            $command->files = $files;
+            try {
+                $handler->handle($command);
+                return $this->redirectToRoute('work.projects.tasks.show', ['id' => $task->getId()]);
+            } catch (DomainException $e) {
+                $this->errors->handle($e);
+                $this->addFlash('error', $e->getMessage());
+            }
+        }
+
+        return $this->render('app/work/projects/tasks/files.html.twig', [
+            'project' => $task->getProject(),
+            'task' => $task,
+            'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/{id}/files/{file_id}/delete", name=".files.delete", methods={"POST"})
+     * @ParamConverter("member", options={"id" = "member_id"})
+     * @param Task $task
+     * @param string $file_id
+     * @param Request $request
+     * @param Files\Remove\Handler $handler
+     * @return Response
+     */
+    public function fileDelete(Task $task, string $file_id, Request $request, Files\Remove\Handler $handler): Response
+    {
+        if (!$this->isCsrfTokenValid('delete-file', $request->request->get('token'))) {
+            return $this->redirectToRoute('work.projects.tasks.show', ['id' => $task->getId()]);
+        }
+
+        $this->denyAccessUnlessGranted(TaskAccess::MANAGE, $task);
+
+        $command = new Files\Remove\Command($this->getUser()->getId(), $task->getId()->getValue(), $file_id);
+
+        try {
+            $handler->handle($command);
+        } catch (DomainException $e) {
+            $this->errors->handle($e);
+            $this->addFlash('error', $e->getMessage());
+        }
+
+        return $this->redirectToRoute('work.projects.tasks.show', ['id' => $task->getId()]);
     }
 
     /**
@@ -480,10 +559,12 @@ class TasksController extends AbstractController
      * @param Request $request
      * @param MemberFetcher $members
      * @param TaskFetcher $tasks
+     * @param CommentFetcher $comments
      * @param Status\Handler $statusHandler
      * @param Progress\Handler $progressHandler
      * @param Type\Handler $typeHandler
      * @param Priority\Handler $priorityHandler
+     * @param Comment\Create\Handler $commentHandler
      * @return Response
      */
     public function show(
@@ -491,10 +572,12 @@ class TasksController extends AbstractController
         Request $request,
         MemberFetcher $members,
         TaskFetcher $tasks,
+        CommentFetcher $comments,
         Status\Handler $statusHandler,
         Progress\Handler $progressHandler,
         Type\Handler $typeHandler,
-        Priority\Handler $priorityHandler
+        Priority\Handler $priorityHandler,
+        Comment\Create\Handler $commentHandler
     ): Response {
         $this->denyAccessUnlessGranted(TaskAccess::MANAGE, $task);
 
@@ -554,15 +637,35 @@ class TasksController extends AbstractController
             }
         }
 
+        $commentCommand = new Comment\Create\Command(
+            $this->getUser()->getId(),
+            Task::class,
+            (string)$task->getId()->getValue()
+        );
+
+        $commentForm = $this->createForm(Comment\Create\Form::class, $commentCommand);
+        $commentForm->handleRequest($request);
+        if ($commentForm->isSubmitted() && $commentForm->isValid()) {
+            try {
+                $commentHandler->handle($commentCommand);
+                return $this->redirectToRoute('work.projects.tasks.show', ['id' => $task->getId()]);
+            } catch (DomainException $e) {
+                $this->errors->handle($e);
+                $this->addFlash('error', $e->getMessage());
+            }
+        }
+
         return $this->render('app/work/projects/tasks/show.html.twig', [
             'project' => $task->getProject(),
             'task' => $task,
             'member' => $member,
             'children' => $tasks->childrenOf($task->getId()->getValue()),
+            'comments' => $comments->allForTask($task->getId()->getValue()),
             'statusForm' => $statusForm->createView(),
             'progressForm' => $progressForm->createView(),
             'typeForm' => $typeForm->createView(),
             'priorityForm' => $priorityForm->createView(),
+            'commentForm' => $commentForm->createView(),
         ]);
     }
 }

@@ -7,6 +7,9 @@ namespace App\Model\Work\Entity\Projects\Task;
 use App\Model\Work\Entity\Members\Member\Id as MemberId;
 use App\Model\Work\Entity\Members\Member\Member;
 use App\Model\Work\Entity\Projects\Project\Project;
+use App\Model\Work\Entity\Projects\Task\File\File;
+use App\Model\Work\Entity\Projects\Task\File\Id as FileId;
+use App\Model\Work\Entity\Projects\Task\File\Info;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -56,6 +59,17 @@ class Task
      * @ORM\Column(type="text", nullable=true)
      */
     private $content;
+    /**
+     * @var ArrayCollection|File[]
+     * @ORM\OneToMany(
+     *     targetEntity="App\Model\Work\Entity\Projects\Task\File\File",
+     *     mappedBy="task",
+     *     orphanRemoval=true,
+     *     cascade={"all"}
+     * )
+     * @ORM\OrderBy({"date" = "ASC"})
+     */
+    private $files;
     /**
      * @var Type
      * @ORM\Column(type="work_projects_tasks_type", length=16)
@@ -140,6 +154,7 @@ class Task
         $this->priority = $priority;
         $this->status = Status::new();
         $this->executors = new ArrayCollection();
+        $this->files = new ArrayCollection();
     }
 
     public function edit(string $name, ?string $content): void
@@ -251,6 +266,21 @@ class Task
         throw new DomainException('Executor is not assigned.');
     }
 
+    public function addFile(FileId $id, Member $member, DateTimeImmutable $date, Info $info): void
+    {
+        $this->files->add(new File($this, $id, $member, $date, $info));
+    }
+
+    public function removeFile(FileId $id): void
+    {
+        foreach ($this->files as $current) {
+            if ($current->getId()->isEqual($id)) {
+                $this->files->removeElement($current);
+                return;
+            }
+        }
+    }
+
     public function start(DateTimeImmutable $date): void
     {
         if (!$this->isNew()) {
@@ -302,6 +332,14 @@ class Task
     public function getContent(): ?string
     {
         return $this->content;
+    }
+
+    /**
+     * @return File[]
+     */
+    public function getFiles(): array
+    {
+        return $this->files->toArray();
     }
 
     public function getType(): Type

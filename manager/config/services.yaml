@@ -16,9 +16,10 @@ services:
   # this creates a service per class whose id is the fully-qualified class name
   App\:
     resource: '../src/*'
-    exclude: '../src/{DependencyInjection,Model/User/Entity,Model/Work/Entity,Migrations,Tests,Kernel.php}'
+    exclude: '../src/{DependencyInjection,Model/User/Entity,Model/Comment/Entity,Model/Work/Entity,Migrations,Tests,Kernel.php}'
 
   App\Model\User\Entity\User\UserRepository: ~
+  App\Model\Comment\Entity\Comment\CommentRepository: ~
   App\Model\Work\Entity\Members\Group\GroupRepository: ~
   App\Model\Work\Entity\Members\Member\MemberRepository: ~
   App\Model\Work\Entity\Projects\Project\ProjectRepository: ~
@@ -88,3 +89,6 @@ services:
 
   App\Twig\Extension\Work\Processor\ProcessorExtension:
     arguments: [!tagged app.twig.work_processor.driver]
+
+  App\Service\Uploader\FileUploader:
+    arguments: ['@default.storage', '%env(STORAGE_BASE_URL)%']

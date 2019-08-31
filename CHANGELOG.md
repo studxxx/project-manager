@@ -1,6 +1,14 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.4.0] - 2019-08-07
+### Added
+- File storage
+- Calendar
+- Comments
+### Updated
+- libs via composer
+
 ## [0.3.4] - 2019-08-07
 ### Updated
 - Config log for production
