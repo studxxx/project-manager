@@ -1,7 +1,15 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.4.0] - 2019-08-07
+## [0.4.1] - 2019-09-01
+### Updated
+- doctrine config
+  - ignoring of sequence in migrations
+- optional arguments in the task model
+### Fixed
+- production mailer url
+
+## [0.4.0] - 2019-08-31
 ### Added
 - File storage
 - Calendar

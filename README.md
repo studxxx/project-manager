@@ -72,4 +72,4 @@ volumes:
 ```
 
 [CHANGELOG]: ./CHANGELOG.md
-[version-badge]: https://img.shields.io/badge/version-0.4.0-blue.svg
+[version-badge]: https://img.shields.io/badge/version-0.4.1-blue.svg
