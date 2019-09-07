@@ -8,6 +8,7 @@ use App\Tests\Builder\Work\Members\GroupBuilder;
 use App\Tests\Builder\Work\Members\MemberBuilder;
 use App\Tests\Builder\Work\Projects\ProjectBuilder;
 use App\Tests\Builder\Work\Projects\TaskBuilder;
+use DateTimeImmutable;
 use PHPUnit\Framework\TestCase;
 
 class RemovePlanTest extends TestCase
@@ -19,11 +20,11 @@ class RemovePlanTest extends TestCase
         $project = (new ProjectBuilder())->build();
         $task = (new TaskBuilder())->build($project, $member);
 
-        $task->plan($date = new \DateTimeImmutable());
+        $task->plan($member, new DateTimeImmutable(), $date = new DateTimeImmutable());
 
         self::assertEquals($date, $task->getPlanDate());
 
-        $task->removePlan();
+        $task->removePlan($member, new DateTimeImmutable());
 
         self::assertNull($task->getPlanDate());
     }

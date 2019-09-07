@@ -8,6 +8,7 @@ use App\Tests\Builder\Work\Members\GroupBuilder;
 use App\Tests\Builder\Work\Members\MemberBuilder;
 use App\Tests\Builder\Work\Projects\ProjectBuilder;
 use App\Tests\Builder\Work\Projects\TaskBuilder;
+use DateTimeImmutable;
 use PHPUnit\Framework\TestCase;
 
 class StartTest extends TestCase
@@ -23,8 +24,8 @@ class StartTest extends TestCase
 
         self::assertFalse($task->hasExecutor($executor->getId()));
 
-        $task->assignExecutor($executor);
-        $task->start($date = new \DateTimeImmutable('+2 days'));
+        $task->assignExecutor($member, new DateTimeImmutable(), $executor);
+        $task->start($member, $date = new DateTimeImmutable('+2 days'));
 
         self::assertTrue($task->isWorking());
         self::assertEquals($date, $task->getStartDate());
@@ -41,11 +42,11 @@ class StartTest extends TestCase
 
         self::assertFalse($task->hasExecutor($executor->getId()));
 
-        $task->assignExecutor($executor);
-        $task->start($date = new \DateTimeImmutable('+2 days'));
+        $task->assignExecutor($member, new DateTimeImmutable(), $executor);
+        $task->start($member, $date = new DateTimeImmutable('+2 days'));
 
         $this->expectExceptionMessage('Task is already started.');
-        $task->start($date);
+        $task->start($member, $date);
     }
 
     public function testWithoutExecutors(): void
@@ -56,6 +57,6 @@ class StartTest extends TestCase
         $task = (new TaskBuilder())->build($project, $member);
 
         $this->expectExceptionMessage('Task does not contain executors.');
-        $task->start(new \DateTimeImmutable());
+        $task->start($member, new DateTimeImmutable());
     }
 }
