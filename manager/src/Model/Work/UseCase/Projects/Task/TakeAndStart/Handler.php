@@ -33,7 +33,7 @@ class Handler
         $actor = $this->members->get(new MemberId($command->actor));
 
         if (!$task->hasExecutor($actor->getId())) {
-            $task->assignExecutor($actor);
+            $task->assignExecutor($actor, new \DateTimeImmutable(), $actor);
         }
 
         $task->start($actor, new DateTimeImmutable());
