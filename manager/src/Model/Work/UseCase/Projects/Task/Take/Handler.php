@@ -9,6 +9,7 @@ use App\Model\Work\Entity\Members\Member\Id as MemberId;
 use App\Model\Work\Entity\Members\Member\MemberRepository;
 use App\Model\Work\Entity\Projects\Task\Id;
 use App\Model\Work\Entity\Projects\Task\TaskRepository;
+use DateTimeImmutable;
 
 class Handler
 {
@@ -29,10 +30,10 @@ class Handler
     public function handle(Command $command): void
     {
         $task = $this->tasks->get(new Id($command->id));
-        $member = $this->members->get(new MemberId($command->member));
+        $actor = $this->members->get(new MemberId($command->actor));
 
-        if (!$task->hasExecutor($member->getId())) {
-            $task->assignExecutor($member);
+        if (!$task->hasExecutor($actor->getId())) {
+            $task->assignExecutor($actor, new DateTimeImmutable(), $actor);
         }
 
         $this->flusher->flush();

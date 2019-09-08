@@ -10,6 +10,11 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Command
 {
     /**
+     * @var string
+     * @Assert\NotBlank()
+     */
+    public $actor;
+    /**
      * @var int
      * @Assert\NotBlank()
      */
@@ -20,14 +25,15 @@ class Command
      */
     public $progress;
 
-    public function __construct(int $id)
+    public function __construct(string $actor, int $id)
     {
+        $this->actor = $actor;
         $this->id = $id;
     }
 
-    public static function fromTask(Task $task): self
+    public static function fromTask(string $actor, Task $task): self
     {
-        $command = new self($task->getId()->getValue());
+        $command = new self($actor, $task->getId()->getValue());
         $command->progress = $task->getProgress();
 
         return $command;
