@@ -34,6 +34,6 @@ class Handler
 
         $task->edit($actor, new DateTimeImmutable(), $command->name, $command->content);
 
-        $this->flusher->flush();
+        $this->flusher->flush($task);
     }
 }
