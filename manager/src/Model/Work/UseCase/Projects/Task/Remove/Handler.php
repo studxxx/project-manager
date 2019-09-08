@@ -27,6 +27,6 @@ class Handler
 
         $this->tasks->remove($task);
 
-        $this->flusher->flush();
+        $this->flusher->flush($task);
     }
 }

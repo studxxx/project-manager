@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Model\Work\Entity\Projects\Task;
 
+use App\Model\AggregateRoot;
+use App\Model\EventsTrait;
 use App\Model\Work\Entity\Members\Member\Id as MemberId;
 use App\Model\Work\Entity\Members\Member\Member;
 use App\Model\Work\Entity\Projects\Project\Project;
@@ -25,8 +27,10 @@ use Webmozart\Assert\Assert;
  *     @ORM\Index(columns={"date"})
  * })
  */
-class Task
+class Task implements AggregateRoot
 {
+    use EventsTrait;
+
     /**
      * @var Id
      * @ORM\Column(type="work_projects_tasks_id")
