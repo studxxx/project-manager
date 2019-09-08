@@ -82,7 +82,7 @@ class EmailNotificationSubscriber implements EventSubscriberInterface
         }
 
         $message = (new Swift_Message('Your Task Executor Assignment'))
-            ->setTo([$executor->getEmail()->getValue() => $executor->getName()->getFull()])
+            ->setTo([$author->getEmail()->getValue() => $author->getName()->getFull()])
             ->setBody($this->twig->render('mail/work/projects/task/executor-assigned-author.html.twig', [
                 'task' => $task,
                 'author' => $author,
