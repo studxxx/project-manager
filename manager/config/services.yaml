@@ -98,6 +98,6 @@ services:
 
   phpcent\Client:
     arguments:
-      - '%env(CENTRIFUGO_API_HOST)%'
-      - '%env(CENTRIFUGO_API_KEY))%'
-      - '%env(CENTRIFUGO_SECRET))%'
+      - '%env(CENTRIFUGO_API_HOST)%/api'
+      - '%env(CENTRIFUGO_API_KEY)%'
+      - '%env(CENTRIFUGO_SECRET)%'
