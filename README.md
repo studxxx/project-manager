@@ -71,5 +71,33 @@ volumes:
   manager-php-fpm-logs:
 ```
 
+### How to pass global vars into twig
+
+#### Base HTML
+```twig
+<!DOCTYPE html>
+<html lang="en" class="h-100">
+<head>
+    <meta charset="UTF-8">
+    <meta name="centrifugo-url" content="{{ centrifugo_url }}">
+</head>
+```
+#### Twig config
+```yaml
+twig:
+  # some params
+  globals:
+    centrifugo_url: '%env(CENTRIFUGO_WS_HOST)%/connection/websocket'
+```
+
+#### Get vars in JS
+```javascript
+const url = document.querySelector('meta[name=centrifugo-url]').getAttribute('content');
+```
+#### .env file
+```
+CENTRIFUGO_WS_HOST=ws://localhost:8083
+```
+
 [CHANGELOG]: ./CHANGELOG.md
 [version-badge]: https://img.shields.io/badge/version-0.5.0-blue.svg
