@@ -100,4 +100,4 @@ CENTRIFUGO_WS_HOST=ws://localhost:8083
 ```
 
 [CHANGELOG]: ./CHANGELOG.md
-[version-badge]: https://img.shields.io/badge/version-0.5.0-blue.svg
+[version-badge]: https://img.shields.io/badge/version-0.6.0-blue.svg
