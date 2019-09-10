@@ -59,6 +59,9 @@ manager-composer-install:
 manager-composer-update:
 	docker-compose run --rm manager-php-cli composer update
 
+manager-composer-outdated:
+	docker-compose run --rm manager-php-cli composer outdated
+
 manager-assets-install:
 	docker-compose run --rm manager-node yarn install
 	docker-compose run --rm manager-node npm rebuild node-sass
