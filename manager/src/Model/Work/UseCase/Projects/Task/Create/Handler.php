@@ -50,6 +50,8 @@ class Handler
 
         $date = new DateTimeImmutable();
 
+        $tasks = [];
+
         foreach ($command->names as $name) {
             $task = new Task(
                 $this->tasks->nextId(),
@@ -72,8 +74,10 @@ class Handler
             }
 
             $this->tasks->add($task);
+
+            $tasks[] = $task;
         }
 
-        $this->flusher->flush();
+        $this->flusher->flush(...$tasks);
     }
 }

@@ -34,6 +34,6 @@ class Handler
 
         $task->changePriority($actor, new DateTimeImmutable(), $command->priority);
 
-        $this->flusher->flush();
+        $this->flusher->flush($task);
     }
 }

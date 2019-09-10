@@ -118,7 +118,7 @@ class TasksController extends AbstractController
 
     /**
      * @Route("/own", name=".own")
-     * @ParamConverter("project", options={"id", "project_id"})
+     * @ParamConverter("project", options={"id" = "project_id"})
      * @param Request $request
      * @param TaskFetcher $tasks
      * @return Response
@@ -327,7 +327,7 @@ class TasksController extends AbstractController
 
     /**
      * @Route("/{id}/revoke/{member_id}", name=".revoke", methods={"POST"})
-     * @ParamConverter("member", options={"id", "member_id"})
+     * @ParamConverter("member", options={"id" = "member_id"})
      * @param Task $task
      * @param Member $member
      * @param Request $request

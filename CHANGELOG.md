@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.6.0] - 2019-09-10
+### Added
+- domain events
+- queue on the redis
+- symfony/messegner
+- centrifugo
+
 ## [0.5.0] - 2019-09-08
 ### Added
 - history changes
