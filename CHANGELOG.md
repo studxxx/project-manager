@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.6.1] - 2019-09-10
+### Update
+- Changed session to redis extension
+- Updated vendor
+
 ## [0.6.0] - 2019-09-10
 ### Added
 - domain events
