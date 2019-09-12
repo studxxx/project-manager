@@ -28,7 +28,7 @@ class SignUpTest extends DbWebTestCase
         self::assertEquals(201, $this->client->getResponse()->getStatusCode());
         self::assertJson($content = $this->client->getResponse()->getContent());
 
-        $data = json_encode($content, true);
+        $data = json_decode($content, true);
         self::assertEquals([], $data);
     }
 
