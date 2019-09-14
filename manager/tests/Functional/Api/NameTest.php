@@ -33,20 +33,20 @@ class NameTest extends DbWebTestCase
         $this->client->setServerParameters(ProfileFixture::userCredentials());
 
         $this->client->request('PUT', self::URI, [], [], ['CONTENT_TYPE' => 'application/json'], json_encode([
-            'id' => Id::next(),
+            'id' => Id::next(), // fake id
             'first' => 'Tom',
             'last' => 'Bent',
         ]));
 
         self::assertEquals(200, $this->client->getResponse()->getStatusCode());
         self::assertJson($content = $this->client->getResponse()->getContent());
-        $data = json_encode($content, true);
+        $data = json_decode($content, true);
 
         self::assertEquals([], $data);
 
         $this->client->request('GET', '/api/profile');
         self::assertJson($content = $this->client->getResponse()->getContent());
-        $data = json_encode($content, true);
+        $data = json_decode($content, true);
 
         self::assertArraySubset([
             'name' => [
@@ -63,7 +63,7 @@ class NameTest extends DbWebTestCase
 
         self::assertEquals(400, $this->client->getResponse()->getStatusCode());
         self::assertJson($content = $this->client->getResponse()->getContent());
-        $data = json_encode($content, true);
+        $data = json_decode($content, true);
 
         self::assertArraySubset([
             'violations' => [
