@@ -17,9 +17,6 @@ security:
       anonymous: true
       stateless: true
       oauth2: true
-#      user_checker: App\Security\UserChecker
-#      http_basic:
-#        provider: fetcher
     main:
       anonymous: true
       user_checker: App\Security\UserChecker
