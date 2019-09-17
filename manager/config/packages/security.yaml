@@ -9,13 +9,17 @@ security:
     dev:
       pattern: ^/(_(profiler|wdt)|css|images|js)/
       security: false
+    api_token:
+      pattern: ^/token$
+      security: false
     api:
       pattern: ^/api
       anonymous: true
       stateless: true
-      user_checker: App\Security\UserChecker
-      http_basic:
-        provider: fetcher
+      oauth2: true
+#      user_checker: App\Security\UserChecker
+#      http_basic:
+#        provider: fetcher
     main:
       anonymous: true
       user_checker: App\Security\UserChecker

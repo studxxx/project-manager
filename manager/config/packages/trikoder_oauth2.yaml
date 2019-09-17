@@ -1,9 +1,9 @@
 trikoder_oauth2:
 
   authorization_server:
-    private_key: '%env(OAUTH2_PRIVATE_KEY)%'
+    private_key: '%env(OAUTH_PRIVATE_KEY)%'
     private_key_passphrase: ~
-    encryption_key: '%env(OAUTH2_ENCRYPTION_KEY)%'
+    encryption_key: '%env(OAUTH_ENCRYPTION_KEY)%'
     encryption_key_type: 'plain'
     access_token_ttl: PT1H
     refresh_token_ttl: P1M
@@ -13,7 +13,7 @@ trikoder_oauth2:
     auth_code_ttl: PT10M
 
   resource_server:
-    public_key: '%env(OAUTH2_PUBLIC_KEY)%'
+    public_key: '%env(OAUTH_PUBLIC_KEY)%'
 
   scopes: ['common']
 
