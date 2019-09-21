@@ -9,7 +9,7 @@ use App\Tests\Functional\DbWebTestCase;
 
 class ShowTest extends DbWebTestCase
 {
-    private const URI = '/api/work/projects/tasks/%s';
+    private const URI = '/api/work/tasks/%s';
 
     public function testAdmin(): void
     {

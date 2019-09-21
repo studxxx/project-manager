@@ -10,8 +10,8 @@ use DateTimeImmutable;
 
 class PlanTest extends DbWebTestCase
 {
-    private const URI = '/api/work/projects/tasks/%s/plan';
-    private const SHOW_URI = '/api/work/projects/tasks/%s';
+    private const URI = '/api/work/tasks/%s/plan';
+    private const SHOW_URI = '/api/work/tasks/%s';
 
     public function testGet(): void
     {
