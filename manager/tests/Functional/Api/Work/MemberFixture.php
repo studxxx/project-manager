@@ -11,12 +11,13 @@ use App\Tests\Builder\Work\Members\GroupBuilder;
 use App\Tests\Builder\Work\Members\MemberBuilder;
 use App\Tests\Functional\AuthFixture;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 
-class MemberFixture extends Fixture
+class MemberFixture extends Fixture implements DependentFixtureInterface
 {
-    public const REFERENCE_MEMBER_USER = 'user_work_member_user';
-    public const REFERENCE_MEMBER_ADMIN = 'user_work_member_admin';
+    public const REFERENCE_MEMBER_USER = 'test_work_member_user';
+    public const REFERENCE_MEMBER_ADMIN = 'test_work_member_admin';
 
     public function load(ObjectManager $manager): void
     {
