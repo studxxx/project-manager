@@ -8,6 +8,7 @@ use App\Model\Work\Entity\Members\Member\Email as MemberEmail;
 use App\Model\Work\Entity\Members\Member\Id as MemberId;
 use App\Model\Work\Entity\Projects\Project\Department\Id as DepartmentId;
 use App\Model\User\Entity\User\Email as UserEmail;
+use App\Model\User\Entity\User\Name;
 use App\Model\User\Entity\User\Role;
 use App\Model\User\Entity\User\User;
 use App\Model\User\Service\PasswordHasher;
@@ -53,12 +54,13 @@ class IndexFixture extends Fixture implements DependentFixtureInterface
         ];
     }
 
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
         $hash = $this->hasher->hash('password');
 
         $user = (new UserBuilder())
             ->viaEmail(new UserEmail('user-projects-index@app.test'), $hash)
+            ->withName(new Name('Test', 'User'))
             ->confirmed()
             ->build();
 
@@ -67,6 +69,7 @@ class IndexFixture extends Fixture implements DependentFixtureInterface
         $admin = (new UserBuilder())
             ->viaEmail(new UserEmail('admin-projects-index@app.test'), $hash)
             ->confirmed()
+            ->withName(new Name('Test', 'Admin'))
             ->withRole(Role::admin())
             ->build();
 
