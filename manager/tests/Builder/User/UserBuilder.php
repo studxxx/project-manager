@@ -119,6 +119,14 @@ class UserBuilder
             );
         }
 
+        if (!$user) {
+            throw new \BadMethodCallException('Specify via method.');
+        }
+
+        if ($this->role) {
+            $user->changeRole($this->role);
+        }
+
         return $user;
     }
 }

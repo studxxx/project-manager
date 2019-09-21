@@ -42,14 +42,14 @@ class ProjectFetcher
         if ($filter->member) {
             $qb->andWhere('EXISTS (
                 SELECT ms.member_id
-                FROM work_projects_project_memberships
+                FROM work_projects_project_memberships ms
                 WHERE ms.project_id = p.id AND ms.member_id = :member
             )');
             $qb->setParameter(':member', $filter->member);
         }
 
         if ($filter->name) {
-            $qb->andWhere($qb->expr()->like('p.name', ':name'));
+            $qb->andWhere($qb->expr()->like('LOWER(p.name)', ':name'));
             $qb->setParameter(':name', '%' . mb_strtolower($filter->name) . '%');
         }
 
@@ -58,7 +58,7 @@ class ProjectFetcher
             $qb->setParameter(':status', $filter->status);
         }
 
-        if (!in_array($sort, ['name', 'status'], true)) {
+        if (!in_array($sort, ['sort', 'name', 'status'], true)) {
             throw new UnexpectedValueException('Cannot sort by ' . $sort);
         }
 
