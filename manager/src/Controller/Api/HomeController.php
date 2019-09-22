@@ -26,6 +26,19 @@ use Symfony\Component\Routing\Annotation\Route;
  *         authorizationUrl="/authorize",
  *         scopes={"common": "Common"}
  *     )
+ * ),
+ * @OA\Schema(
+ *     schema="ErrorModel",
+ *     type="object",
+ *     @OA\Property(property="error", type="object", nullable=true,
+ *         @OA\Property(property="code", type="integer"),
+ *         @OA\Property(property="message", type="string"),
+ *     ),
+ *     @OA\Property(property="violations", type="array", nullable=true, @OA\Items(
+ *         type="object",
+ *         @OA\Property(property="propertyPath", type="string"),
+ *         @OA\Property(property="title", type="string")
+ *     ))
  * )
  */
 class HomeController extends AbstractController
