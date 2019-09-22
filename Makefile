@@ -99,6 +99,9 @@ manager-test-unit:
 manager-test-functional:
 	docker-compose run --rm manager-php-cli php bin/phpunit --testsuite=functional
 
+manager-docs:
+	docker-compose run --rm manager-php-cli php bin/console api:docs --no-interaction
+
 build-production:
 	docker build --pull --file=manager/docker/production/nginx.docker --tag ${REGISTRY_ADDRESS}/manager-nginx:${IMAGE_TAG} manager
 	docker build --pull --file=manager/docker/production/php-fpm.docker --tag ${REGISTRY_ADDRESS}/manager-php-fpm:${IMAGE_TAG} manager
