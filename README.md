@@ -104,4 +104,4 @@ CENTRIFUGO_WS_HOST=ws://localhost:8083
 > if you use phpunit version 8 that you have to install package `composer require --dev dms/phpunit-arraysubset-asserts`
 
 [CHANGELOG]: ./CHANGELOG.md
-[version-badge]: https://img.shields.io/badge/version-0.6.1-blue.svg
+[version-badge]: https://img.shields.io/badge/version-0.7.0-blue.svg
