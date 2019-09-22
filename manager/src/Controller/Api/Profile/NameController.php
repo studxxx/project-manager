@@ -6,6 +6,7 @@ namespace App\Controller\Api\Profile;
 
 use App\Model\User\UseCase\Name;
 use Doctrine\ORM\EntityNotFoundException;
+use OpenApi\Annotations as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,6 +29,39 @@ class NameController extends AbstractController
     }
 
     /**
+     * @OA\Put(
+     *     path="/profile/name",
+     *     tags={"Profile"},
+     *     @OA\RequestBody(
+     *          @OA\JsonContent(
+     *              type="object",
+     *              required={"first", "last"},
+     *              @OA\Property(property="first", type="string"),
+     *              @OA\Property(property="last", type="string")
+     *          )
+     *     ),
+     *     @OA\Response(
+     *          response=200,
+     *          description="Success response"
+     *     ),
+     *     @OA\Response(
+     *          response=400,
+     *          description="Errors",
+     *          @OA\JsonContent(
+     *              type="object",
+     *              @OA\Property(property="error", type="object", nullable=true,
+     *                  @OA\Property(property="code", type="integer"),
+     *                  @OA\Property(property="message", type="string"),
+     *              ),
+     *              @OA\Property(property="violations", type="array", nullable=true, @OA\Items(
+     *                  type="objects",
+     *                  @OA\Property(property="propertyPath", type="string"),
+     *                  @OA\Property(property="title", type="string"),
+     *              ))
+     *          )
+     *     ),
+     *     security={{"oauth2": {"common"}}}
+     * )
      * @Route("/profile/name", name="profile.name", methods={"PUT"})
      * @param Request $request
      * @param Name\Handler $handler
