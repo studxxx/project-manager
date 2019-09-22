@@ -89,7 +89,7 @@ class CreateTest extends DbWebTestCase
 
         $this->assertSame(200, $this->client->getResponse()->getStatusCode());
 
-        $this->assertContains('User with this email is already exists.', $crawler
+        $this->assertContains('User with this email already exists.', $crawler
             ->filter('.alert.alert-danger')->text());
     }
 }
