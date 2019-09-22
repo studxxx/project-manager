@@ -1,4 +1,4 @@
-FROM node:12.4-alpine AS node-builder
+FROM node:12.7-alpine AS node-builder
 
 WORKDIR /app
 
@@ -10,7 +10,7 @@ COPY ./ ./
 
 RUN npm run build
 
-=====================
+######################
 
 FROM nginx:1.17-alpine
 
