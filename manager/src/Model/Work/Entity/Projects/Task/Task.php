@@ -212,7 +212,7 @@ class Task implements AggregateRoot
 
     public function setChildOf(Member $actor, DateTimeImmutable $date, Task $parent): void
     {
-        if ($parent) {
+        if ($parent === $this->parent) {
             return;
         }
 

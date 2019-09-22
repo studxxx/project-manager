@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.7.0] - 2019-09-22
+### Added
+- OAuth server
+- API sign up
+- API projects controller
+- API tasks controller
+
 ## [0.6.1] - 2019-09-10
 ### Update
 - Changed session to redis extension

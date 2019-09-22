@@ -22,7 +22,7 @@ class Command
     public $id;
     /**
      * @var DateTimeImmutable
-     * @Assert\Date()
+     * @Assert\NotBlank()
      */
     public $date;
 
