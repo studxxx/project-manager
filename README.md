@@ -34,6 +34,12 @@ REGISTRY_ADDRESS=registry IMAGE_TAG=0 make build-production
 ### Before installation
 
 ## Documentation
+### Dev env
+[doc](http://localhost:8080/docs/#/)
+[project](http://localhost:8080/login)
+[mailhog](http://localhost:8082/#)
+[centrifugo](http://localhost:8083/#/actions)
+[file-storage](http://localhost:8081/)
 
 ### Exclude autowiring
 
@@ -103,5 +109,13 @@ CENTRIFUGO_WS_HOST=ws://localhost:8083
 
 > if you use phpunit version 8 that you have to install package `composer require --dev dms/phpunit-arraysubset-asserts`
 
+### API Docs
+
+https://github.com/swagger-api/swagger-ui
+
+### Request resolver
+
+https://github.com/fesor/request-objects
+
 [CHANGELOG]: ./CHANGELOG.md
-[version-badge]: https://img.shields.io/badge/version-0.7.0-blue.svg
+[version-badge]: https://img.shields.io/badge/version-0.8.0-blue.svg

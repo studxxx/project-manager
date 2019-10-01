@@ -17,6 +17,7 @@ update: manager-composer-update
 ############################
 test: manager-test
 test-unit: manager-test-unit
+test-unit-coverage: manager-test-unit-coverage
 test-functional: manager-test-functional
 
 ############################
@@ -93,11 +94,23 @@ manager-assets-dev:
 manager-test:
 	docker-compose run --rm manager-php-cli php bin/phpunit
 
+manager-test-coverage:
+	docker-compose run --rm manager-php-cli php bin/phpunit --coverage-clover var/clover.xml --coverage-html var/coverage
+
 manager-test-unit:
 	docker-compose run --rm manager-php-cli php bin/phpunit --testsuite=unit
 
+manager-test-unit-coverage:
+	docker-compose run --rm manager-php-cli php bin/phpunit --testsuite=unit --coverage-clover var/clover.xml --coverage-html var/coverage
+
 manager-test-functional:
 	docker-compose run --rm manager-php-cli php bin/phpunit --testsuite=functional
+
+manager-test-functional-coverage:
+	docker-compose run --rm manager-php-cli php bin/phpunit --testsuite=functional --coverage-clover var/clover.xml --coverage-html var/coverage
+
+manager-docs:
+	docker-compose run --rm manager-php-cli php bin/console api:docs --no-interaction
 
 build-production:
 	docker build --pull --file=manager/docker/production/nginx.docker --tag ${REGISTRY_ADDRESS}/manager-nginx:${IMAGE_TAG} manager

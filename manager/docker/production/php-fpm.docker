@@ -1,9 +1,6 @@
-FROM php:7.3-fpm AS builder
+FROM php:7.3-cli AS php-cli-builder
 
-RUN apt-get update and apt-get install -y unzip \
-    && docker-php-ext-install opcache
-
-COPY ./docker/production/php/default.ini /usr/local/etc/php/conf.d/default.ini
+RUN apt-get update && apt-get install -y unzip
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/bin --filename=composer --quiet
 
@@ -13,10 +10,23 @@ WORKDIR /app
 
 COPY ./composer.json ./composer.lock ./
 
-RUN composer install --no-dev --prefer-dist --optimize-autoloader
+RUN composer install --no-dev --no-scripts --prefer-dist --optimize-autoloader
 
-####
-# Білдер для продакшена
+######################
+
+FROM node:12.7-alpine AS node-builder
+
+WORKDIR /app
+
+COPY ./package.json ./yarn.lock ./
+
+RUN yarn install && npm rebuild node-sass
+
+COPY ./ ./
+
+RUN npm run build
+
+######################
 
 FROM php:7.3-fpm
 
@@ -42,5 +52,3 @@ RUN php bin/console assets:install
 
 RUN php bin/console cache:warmup \
     && chown -R www-data:www-data ./var
-
-
