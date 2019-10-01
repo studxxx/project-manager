@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.8.0] - 2019-10-01
+### Added
+- Some improvements
+
 ## [0.7.0] - 2019-09-22
 ### Added
 - OAuth server
