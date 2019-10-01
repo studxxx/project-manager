@@ -34,6 +34,12 @@ REGISTRY_ADDRESS=registry IMAGE_TAG=0 make build-production
 ### Before installation
 
 ## Documentation
+### Dev env
+[doc](http://localhost:8080/docs/#/)
+[project](http://localhost:8080/login)
+[mailhog](http://localhost:8082/#)
+[centrifugo](http://localhost:8083/#/actions)
+[file-storage](http://localhost:8081/)
 
 ### Exclude autowiring
 
