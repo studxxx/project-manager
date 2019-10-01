@@ -40,6 +40,11 @@ class Member
      * @ORM\Column(type="work_members_member_status")
      */
     private $status;
+    /**
+     * @ORM\Version()
+     * @ORM\Column(type="integer")
+     */
+    private $version;
 
     /**
      * Member constructor.
