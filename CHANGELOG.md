@@ -1,6 +1,14 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.8.2] - 2019-02-09
+### Updated
+- npm libraries
+
+## [0.8.1] - 2019-02-09
+### Fixed
+- init project
+
 ## [0.8.0] - 2019-10-01
 ### Added
 - Some improvements
