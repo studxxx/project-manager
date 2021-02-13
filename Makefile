@@ -116,9 +116,6 @@ build:
 	docker build --pull --tag=${REGISTRY_ADDRESS}/manager-nginx:${IMAGE_TAG} --file=manager/docker/production/nginx.docker manager
 	docker build --pull --tag=${REGISTRY_ADDRESS}/manager-php-fpm:${IMAGE_TAG} --file=manager/docker/production/php-fpm.docker manager
 	docker build --pull --tag=${REGISTRY_ADDRESS}/manager-php-cli:${IMAGE_TAG} --file=manager/docker/production/php-cli.docker manager
-	#docker build --pull --file=manager/docker/production/postgres.docker --tag ${REGISTRY_ADDRESS}/manager-postgres:${IMAGE_TAG} manager
-	#docker build --pull --file=manager/docker/production/redis.docker --tag ${REGISTRY_ADDRESS}/manager-redis:${IMAGE_TAG} manager
-	#docker build --pull --file=centrifugo/docker/production/centrifugo.docker --tag ${REGISTRY_ADDRESS}/centrifugo:${IMAGE_TAG} centrifugo
 
 try-build:
 	 REGISTRY_ADDRESS=localhost IMAGE_TAG=0 make build
