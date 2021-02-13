@@ -9,6 +9,18 @@ pipeline {
         sh "make init"
       }
     }
+    stage("Test") {
+      parallel {
+        state("Manager") {
+          sh "make test"
+        }
+        post {
+          failure {
+            archiveArtifacts "manager/var/log/**/*"
+          }
+        }
+      }
+    }
     stage("Down") {
       steps {
         sh "make docker-down-clear"
