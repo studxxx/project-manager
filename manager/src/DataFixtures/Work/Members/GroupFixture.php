@@ -7,7 +7,7 @@ namespace App\DataFixtures\Work\Members;
 use App\Model\Work\Entity\Members\Group\Group;
 use App\Model\Work\Entity\Members\Group\Id;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use Exception;
 
 class GroupFixture extends Fixture
@@ -19,7 +19,7 @@ class GroupFixture extends Fixture
      * @param ObjectManager $manager
      * @throws Exception
      */
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
         $staff = new Group(
             Id::next(),

@@ -13,7 +13,7 @@ use App\Model\Work\Entity\Members\Member\Member;
 use App\Model\Work\Entity\Members\Member\Name;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 
 class MemberFixture extends Fixture implements DependentFixtureInterface
 {
