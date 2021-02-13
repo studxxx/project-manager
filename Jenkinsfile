@@ -35,6 +35,23 @@ pipeline {
         sh "make build"
       }
     }
+    stage("Push") {
+      when {
+        branch "master"
+      }
+      steps {
+        withCredentials([
+          usernamePassword(
+            credentialId: "REGISTRY_AUTH",
+            usernameVariable: "USER",
+            passwordVariable: "PASSWORD"
+          )
+        ]) {
+          sh "docker login -u=$USER -p=$PASSWORD $REGISTRY_ADDRESS"
+        }
+        sh "make push"
+      }
+    }
   }
   post {
     always {

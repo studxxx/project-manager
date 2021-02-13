@@ -120,13 +120,10 @@ build:
 try-build:
 	 REGISTRY_ADDRESS=localhost IMAGE_TAG=0 make build
 
-push-production:
+push:
 	docker push ${REGISTRY_ADDRESS}/manager-nginx:${IMAGE_TAG}
 	docker push ${REGISTRY_ADDRESS}/manager-php-fpm:${IMAGE_TAG}
 	docker push ${REGISTRY_ADDRESS}/manager-php-cli:${IMAGE_TAG}
-	docker push ${REGISTRY_ADDRESS}/manager-postgres:${IMAGE_TAG}
-	docker push ${REGISTRY_ADDRESS}/manager-redis:${IMAGE_TAG}
-	docker push ${REGISTRY_ADDRESS}/centrifugo:${IMAGE_TAG}
 
 deploy-production:
 	ssh -o StrictHostKeyChecking=no ${PRODUCTION_HOST} -p ${PRODUCTION_PORT} 'rm -rf docker-compose.yml .env'
