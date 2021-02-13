@@ -39,7 +39,7 @@ pipeline {
       steps {
         withCredentials([
           usernamePassword(
-            credentialId: "REGISTRY_AUTH",
+            credentialsId: "REGISTRY_AUTH",
             usernameVariable: "USER",
             passwordVariable: "PASSWORD"
           )
