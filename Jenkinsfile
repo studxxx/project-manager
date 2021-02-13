@@ -32,7 +32,7 @@ pipeline {
     }
     stage("Build") {
       steps {
-        sh "make build-production"
+        sh "make build"
       }
     }
   }
