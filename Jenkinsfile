@@ -2,6 +2,8 @@ pipeline {
   agent any
   environment {
     CI = 'true'
+    REGISTRY_ADDRESS = credentials("REGISTRY_ADDRESS")
+    IMAGE_TAG = sh(returnStdout: true, script: "echo '${env.BUILD_TAG}' | sed 's/%2F/-/g'").trim()
   }
   stages {
     stage("Init") {
@@ -26,6 +28,11 @@ pipeline {
     stage("Down") {
       steps {
         sh "make docker-down-clear"
+      }
+    }
+    stage("Build") {
+      steps {
+        "make build-production"
       }
     }
   }
