@@ -120,7 +120,9 @@ build:
 try-build:
 	 REGISTRY_ADDRESS=localhost IMAGE_TAG=0 make build
 
-push:
+push: push-manager
+
+push-manager:
 	docker push ${REGISTRY_ADDRESS}/manager-nginx:${IMAGE_TAG}
 	docker push ${REGISTRY_ADDRESS}/manager-php-fpm:${IMAGE_TAG}
 	docker push ${REGISTRY_ADDRESS}/manager-php-cli:${IMAGE_TAG}
