@@ -12,11 +12,13 @@ pipeline {
     stage("Test") {
       parallel {
         stage("Manager") {
-          sh "make test"
-        }
-        post {
-          failure {
-            archiveArtifacts "manager/var/log/**/*"
+          steps {
+            sh "make manager-test"
+          }
+          post {
+            failure {
+              archiveArtifacts 'manager/var/log/**/*'
+            }
           }
         }
       }
