@@ -11,7 +11,7 @@ pipeline {
     }
     stage("Test") {
       parallel {
-        state("Manager") {
+        stage("Manager") {
           sh "make test"
         }
         post {
