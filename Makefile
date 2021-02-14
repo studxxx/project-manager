@@ -127,7 +127,7 @@ push-manager:
 	docker push ${REGISTRY_ADDRESS}/manager-php-fpm:${IMAGE_TAG}
 	docker push ${REGISTRY_ADDRESS}/manager-php-cli:${IMAGE_TAG}
 
-deploy-production:
+deploy:
 	ssh -o StrictHostKeyChecking=no ${PRODUCTION_HOST} -p ${PRODUCTION_PORT} 'rm -rf docker-compose.yml .env'
 	scp -o StrictHostKeyChecking=no -P ${PRODUCTION_PORT} docker-compose-prod.yml ${PRODUCTION_HOST}:docker-compose.yml
 	ssh -o StrictHostKeyChecking=no ${PRODUCTION_HOST} -p ${PRODUCTION_PORT} 'echo "REGISTRY_ADDRESS=${REGISTRY_ADDRESS}" >> .env'
