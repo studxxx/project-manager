@@ -41,10 +41,10 @@ docker-down-clear:
 	docker-compose down -v --remove-orphans
 
 docker-pull:
-	docker-compose pull
+	- docker-compose pull
 
 docker-build:
-	docker-compose build
+	DOCKER_BUILDKIT=1 COMPOSE_DOCKER_CLI_BUILD=1 docker-compose build --build-arg BUILDKIT_INLINE_CACHE=1 --pull
 
 docker-logs:
 	docker-compose logs -f
