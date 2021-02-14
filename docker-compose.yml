@@ -1,9 +1,12 @@
 version: '3.9'
 services:
   manager-nginx:
+    image: ${REGISTRY_ADDRESS:-localhost}/manager-dev-nginx:cache
     build:
       context: ./manager/docker/development
       dockerfile: nginx.docker
+      cache_from:
+        - ${REGISTRY_ADDRESS:-localhost}/manager-dev-nginx:cache
     volumes:
       - ./manager:/app
     depends_on:
@@ -11,9 +14,12 @@ services:
     ports:
       - "8001:80"
   manager-php-fpm:
+    image: ${REGISTRY_ADDRESS:-localhost}/manager-dev-php-fpm:cache
     build:
       context: ./manager/docker/development
       dockerfile: php-fpm.docker
+      cache_from:
+        - ${REGISTRY_ADDRESS:-localhost}/manager-dev-php-fpm:cache
     volumes:
       - ./manager:/app
     depends_on:
@@ -26,9 +32,12 @@ services:
     environment:
       APP_DEBUG: 1
   manager-php-cli:
+    image: ${REGISTRY_ADDRESS:-localhost}/manager-dev-php-cli:cache
     build:
       context: ./manager/docker/development
       dockerfile: php-cli.docker
+      cache_from:
+        - ${REGISTRY_ADDRESS:-localhost}/manager-dev-php-cli:cache
     volumes:
       - ./manager:/app
       - composer:/root/.composer/cache
@@ -52,9 +61,12 @@ services:
     ports:
       - "54321:5432"
   manager-queue-worker:
+    image: ${REGISTRY_ADDRESS:-localhost}/manager-dev-php-cli:cache
     build:
       context: ./manager/docker/development
       dockerfile: php-cli.docker
+      cache_from:
+        - ${REGISTRY_ADDRESS:-localhost}/manager-dev-php-cli:cache
     volumes:
       - ./manager:/app
       - composer:/root/.composer/cache
