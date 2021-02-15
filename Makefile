@@ -46,6 +46,9 @@ docker-pull:
 docker-build:
 	DOCKER_BUILDKIT=1 COMPOSE_DOCKER_CLI_BUILD=1 docker-compose build --build-arg BUILDKIT_INLINE_CACHE=1 --pull
 
+push-dev-cache:
+	docker-compose push
+
 docker-logs:
 	docker-compose logs -f
 
@@ -169,6 +172,16 @@ push-manager:
 	docker push ${REGISTRY_ADDRESS}/manager-nginx:${IMAGE_TAG}
 	docker push ${REGISTRY_ADDRESS}/manager-php-fpm:${IMAGE_TAG}
 	docker push ${REGISTRY_ADDRESS}/manager-php-cli:${IMAGE_TAG}
+
+push-build-cache: push-build-cache-manager
+
+push-build-cache-manager:
+	docker push ${REGISTRY_ADDRESS}/manager-nginx:cache-builder
+	docker push ${REGISTRY_ADDRESS}/manager-nginx:cache
+	docker push ${REGISTRY_ADDRESS}/manager-php-fpm:cache-builder
+	docker push ${REGISTRY_ADDRESS}/manager-php-fpm:cache
+	docker push ${REGISTRY_ADDRESS}/manager-php-cli:cache-builder
+	docker push ${REGISTRY_ADDRESS}/manager-php-cli:cache
 
 deploy:
 	ssh -o StrictHostKeyChecking=no deploy@${HOST} -p ${PORT} 'rm -rf manager_${BUILD_NUMBER}'
