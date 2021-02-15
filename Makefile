@@ -118,10 +118,47 @@ manager-test-functional-coverage:
 manager-docs:
 	docker-compose run --rm manager-php-cli php bin/console api:docs --no-interaction
 
-build:
-	docker build --pull --tag=${REGISTRY_ADDRESS}/manager-nginx:${IMAGE_TAG} --file=manager/docker/production/nginx.docker manager
-	docker build --pull --tag=${REGISTRY_ADDRESS}/manager-php-fpm:${IMAGE_TAG} --file=manager/docker/production/php-fpm.docker manager
-	docker build --pull --tag=${REGISTRY_ADDRESS}/manager-php-cli:${IMAGE_TAG} --file=manager/docker/production/php-cli.docker manager
+build: build-manager
+
+build-manager:
+	DOCKER_BUILDKIT=1 docker --log-level=debug build --pull --build-arg BUILDKIT_INLINE_CACHE=1 \
+	--target node-builder \
+	--cache-from ${REGISTRY_ADDRESS}/manager-nginx:cache-builder \
+	--tag ${REGISTRY_ADDRESS}/manager-nginx:cache-builder \
+	--file manager/docker/production/nginx.docker manager
+
+	DOCKER_BUILDKIT=1 docker --log-level=debug build --pull --build-arg BUILDKIT_INLINE_CACHE=1 \
+	--cache-from ${REGISTRY_ADDRESS}/manager-nginx:cache-builder \
+	--cache-from ${REGISTRY_ADDRESS}/manager-nginx:cache \
+	--tag ${REGISTRY_ADDRESS}/manager-nginx:cache \
+	--tag ${REGISTRY_ADDRESS}/manager-nginx:${IMAGE_TAG} \
+	--file manager/docker/production/nginx.docker manager
+
+	DOCKER_BUILDKIT=1 docker --log-level=debug build --pull --build-arg BUILDKIT_INLINE_CACHE=1 \
+	--target php-cli-builder \
+	--cache-from ${REGISTRY_ADDRESS}/manager-php-fpm:cache-builder \
+	--tag ${REGISTRY_ADDRESS}/manager-php-fpm:cache-builder \
+	--file manager/docker/production/php-fpm.docker manager
+
+	DOCKER_BUILDKIT=1 docker --log-level=debug build --pull --build-arg BUILDKIT_INLINE_CACHE=1 \
+	--cache-from ${REGISTRY_ADDRESS}/manager-php-fpm:cache-builder \
+	--cache-from ${REGISTRY_ADDRESS}/manager-php-fpm:cache \
+	--tag ${REGISTRY_ADDRESS}/manager-php-fpm:cache \
+	--tag ${REGISTRY_ADDRESS}/manager-php-fpm:${IMAGE_TAG} \
+	--file manager/docker/production/php-fpm.docker manager
+
+	DOCKER_BUILDKIT=1 docker --log-level=debug build --pull --build-arg BUILDKIT_INLINE_CACHE=1 \
+	--target builder \
+	--cache-from ${REGISTRY_ADDRESS}/manager-php-cli:cache-builder \
+	--tag ${REGISTRY_ADDRESS}/manager-php-cli:cache-builder \
+	--file manager/docker/production/php-cli.docker manager
+
+	DOCKER_BUILDKIT=1 docker --log-level=debug build --pull --build-arg BUILDKIT_INLINE_CACHE=1 \
+	--cache-from ${REGISTRY_ADDRESS}/manager-php-cli:cache-builder \
+	--cache-from ${REGISTRY_ADDRESS}/manager-php-cli:cache \
+	--tag ${REGISTRY_ADDRESS}/manager-php-cli:cache \
+	--tag ${REGISTRY_ADDRESS}/manager-php-cli:${IMAGE_TAG} \
+	--file manager/docker/production/php-cli.docker manager
 
 try-build:
 	 REGISTRY_ADDRESS=localhost IMAGE_TAG=0 make build
