@@ -48,6 +48,11 @@ COPY ./ ./
 
 ENV APP_ENV prod
 
+RUN mkdir -p var/oauth \
+    && openssl genrsa -out var/oauth/private.key 2048 \
+    && openssl rsa -in var/oauth/private.key -pubout -out var/oauth/public.key \
+    && chmod 644 var/oauth/private.key var/oauth/public.key
+
 RUN php bin/console assets:install
 
 RUN php bin/console cache:warmup \

@@ -49,10 +49,16 @@ docker-build:
 docker-logs:
 	docker-compose logs -f
 
-manager-init: manager-composer-install manager-assets-install manager-oauth-keys manager-wait-db manager-migrations manager-fixtures manager-ready
+manager-init: manager-permissions manager-composer-install manager-assets-install manager-oauth-keys \
+	manager-wait-db manager-migrations manager-fixtures \
+	manager-ready
+
+manager-permissions:
+	docker run --rm -v ${PWD}/manager:/app --workdir=/app alpine sh -c 'mkdir -p var/cache var/log var/test ; chmod 777 var/cache var/log var/test'
 
 manager-clear:
 	docker run --rm -v ${PWD}/manager:/app --workdir=/app alpine rm -f .ready
+	docker run --rm -v ${PWD}/manager:/app -w /app alpine sh -c 'rm -rf var/cache/* var/log/* var/test/*'
 
 manager-composer-install:
 	docker-compose run --rm manager-php-cli composer install
@@ -139,17 +145,19 @@ deploy:
 	ssh -o StrictHostKeyChecking=no deploy@${HOST} -p ${PORT} 'cd manager_${BUILD_NUMBER} && echo "MANAGER_REDIS_PASSWORD=${MANAGER_REDIS_PASSWORD}" >> .env'
 	ssh -o StrictHostKeyChecking=no deploy@${HOST} -p ${PORT} 'cd manager_${BUILD_NUMBER} && echo "MANAGER_MAILER_URL=${MANAGER_MAILER_URL}" >> .env'
 	ssh -o StrictHostKeyChecking=no deploy@${HOST} -p ${PORT} 'cd manager_${BUILD_NUMBER} && echo "MANAGER_OAUTH_FACEBOOK_SECRET=${MANAGER_OAUTH_FACEBOOK_SECRET}" >> .env'
+	ssh -o StrictHostKeyChecking=no deploy@${HOST} -p ${PORT} 'cd manager_${BUILD_NUMBER} && echo "STORAGE_BASE_URL=${STORAGE_BASE_URL}" >> .env'
 	ssh -o StrictHostKeyChecking=no deploy@${HOST} -p ${PORT} 'cd manager_${BUILD_NUMBER} && echo "STORAGE_FTP_HOST=${STORAGE_FTP_HOST}" >> .env'
 	ssh -o StrictHostKeyChecking=no deploy@${HOST} -p ${PORT} 'cd manager_${BUILD_NUMBER} && echo "STORAGE_FTP_USERNAME=${STORAGE_FTP_USERNAME}" >> .env'
 	ssh -o StrictHostKeyChecking=no deploy@${HOST} -p ${PORT} 'cd manager_${BUILD_NUMBER} && echo "STORAGE_FTP_PASSWORD=${STORAGE_FTP_PASSWORD}" >> .env'
 	ssh -o StrictHostKeyChecking=no deploy@${HOST} -p ${PORT} 'cd manager_${BUILD_NUMBER} && echo "CENTRIFUGO_WS_HOST=${CENTRIFUGO_WS_HOST}" >> .env'
 	ssh -o StrictHostKeyChecking=no deploy@${HOST} -p ${PORT} 'cd manager_${BUILD_NUMBER} && echo "CENTRIFUGO_API_KEY=${CENTRIFUGO_API_KEY}" >> .env'
 	ssh -o StrictHostKeyChecking=no deploy@${HOST} -p ${PORT} 'cd manager_${BUILD_NUMBER} && echo "CENTRIFUGO_SECRET=${CENTRIFUGO_SECRET}" >> .env'
+	ssh -o StrictHostKeyChecking=no deploy@${HOST} -p ${PORT} 'cd manager_${BUILD_NUMBER} && echo "OAUTH_ENCRYPTION_KEY=${OAUTH_ENCRYPTION_KEY}" >> .env'
 	ssh -o StrictHostKeyChecking=no deploy@${HOST} -p ${PORT} 'cd manager_${BUILD_NUMBER} && docker-compose pull'
-	ssh -o StrictHostKeyChecking=no deploy@${HOST} -p ${PORT} 'cd manager_${BUILD_NUMBER} && docker-compose up --build manager-progress manager-php-cli'
+	ssh -o StrictHostKeyChecking=no deploy@${HOST} -p ${PORT} 'cd manager_${BUILD_NUMBER} && docker-compose up --build -d manager-postgres manager-php-cli'
 	ssh -o StrictHostKeyChecking=no deploy@${HOST} -p ${PORT} 'cd manager_${BUILD_NUMBER} && until docker-compose exec -T manager-postgres pg_isready --timeout=0 --dbname=app ; do sleep 1 ; done'
 	ssh -o StrictHostKeyChecking=no deploy@${HOST} -p ${PORT} 'cd manager_${BUILD_NUMBER} && docker-compose run --rm manager-php-cli php bin/console doctrine:migrations:migrate --no-interaction'
-	ssh -o StrictHostKeyChecking=no deploy@${HOST} -p ${PORT} 'cd manager_${BUILD_NUMBER} && docker-compose --build -d --remove-orphans'
+	ssh -o StrictHostKeyChecking=no deploy@${HOST} -p ${PORT} 'cd manager_${BUILD_NUMBER} && docker-compose up --build -d --remove-orphans'
 	ssh -o StrictHostKeyChecking=no deploy@${HOST} -p ${PORT} 'rm -f manager'
 	ssh -o StrictHostKeyChecking=no deploy@${HOST} -p ${PORT} 'ln -sr manager_${BUILD_NUMBER} manager'
 
