@@ -34,7 +34,6 @@ services:
       - centrifugo
   manager-php-cli:
     image: ${REGISTRY_ADDRESS}/manager-php-cli:${IMAGE_TAG}
-    restart: always
     environment:
       APP_SECRET: ${MANAGER_APP_SECRET}
       DATABASE_URL: pgsql://app:${MANAGER_DB_PASSWORD}@manager-postgres:5432/app
@@ -93,7 +92,7 @@ services:
       POSTGRES_PASSWORD: ${MANAGER_DB_PASSWORD}
       POSTGRES_DB: app
   manager-redis:
-    image: resis:5.0-alpine
+    image: redis:5.0-alpine
     restart: always
     volumes:
       - manager-redis:/data

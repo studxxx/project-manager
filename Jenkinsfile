@@ -59,12 +59,14 @@ pipeline {
           string(credentialsId: 'MANAGER_REDIS_PASSWORD', variable: 'MANAGER_REDIS_PASSWORD'),
           string(credentialsId: 'MANAGER_OAUTH_FACEBOOK_SECRET', variable: 'MANAGER_OAUTH_FACEBOOK_SECRET'),
           string(credentialsId: 'MANAGER_MAILER_URL', variable: 'MANAGER_MAILER_URL'),
+          string(credentialsId: 'STORAGE_BASE_URL', variable: 'STORAGE_BASE_URL'),
           string(credentialsId: 'STORAGE_FTP_HOST', variable: 'STORAGE_FTP_HOST'),
           string(credentialsId: 'STORAGE_FTP_USERNAME', variable: 'STORAGE_FTP_USERNAME'),
           string(credentialsId: 'STORAGE_FTP_PASSWORD', variable: 'STORAGE_FTP_PASSWORD'),
           string(credentialsId: 'CENTRIFUGO_WS_HOST', variable: 'CENTRIFUGO_WS_HOST'),
           string(credentialsId: 'CENTRIFUGO_API_KEY', variable: 'CENTRIFUGO_API_KEY'),
-          string(credentialsId: 'CENTRIFUGO_SECRET', variable: 'CENTRIFUGO_SECRET')
+          string(credentialsId: 'CENTRIFUGO_SECRET', variable: 'CENTRIFUGO_SECRET'),
+          string(credentialsId: 'OAUTH_ENCRYPTION_KEY', variable: 'OAUTH_ENCRYPTION_KEY')
         ]) {
           sshagent(credentials: ['PRODUCTION_AUTH']) {
             sh "BUILD_NUMBER=${env.BUILD_NUMBER} make deploy"
