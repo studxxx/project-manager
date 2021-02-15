@@ -9,6 +9,7 @@ pipeline {
     stage("Init") {
       steps {
         sh "make init"
+        sh "make push-dev-cache"
       }
     }
     stage("Test") {
@@ -36,6 +37,20 @@ pipeline {
       }
       steps {
         sh "make build"
+      }
+    }
+    stage("Push Cached Images") {
+      steps {
+        withCredentials([
+          usernamePassword(
+            credentialsId: "REGISTRY_AUTH",
+            usernameVariable: "USER",
+            passwordVariable: "PASSWORD"
+          )
+        ]) {
+          sh "docker login -u=$USER -p=$PASSWORD"
+        }
+        sh "make push-build-cache"
       }
     }
     stage("Push") {
