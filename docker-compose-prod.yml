@@ -1,4 +1,4 @@
-version: '3.7'
+version: '3.9'
 services:
   manager-nginx:
     image: ${REGISTRY_ADDRESS}/manager-nginx:${IMAGE_TAG}
@@ -34,7 +34,6 @@ services:
       - centrifugo
   manager-php-cli:
     image: ${REGISTRY_ADDRESS}/manager-php-cli:${IMAGE_TAG}
-    restart: always
     environment:
       APP_SECRET: ${MANAGER_APP_SECRET}
       DATABASE_URL: pgsql://app:${MANAGER_DB_PASSWORD}@manager-postgres:5432/app
@@ -84,7 +83,7 @@ services:
       - centrifugo
     command: sh -c "sleep 30 && php bin/console messenger:consume async -vv"
   manager-postgres:
-    image: ${REGISTRY_ADDRESS}/manager-postgres:${IMAGE_TAG}
+    image: postgres:13.1-alpine
     restart: always
     volumes:
       - manager-postgres:/var/lib/postgresql/data
@@ -93,7 +92,7 @@ services:
       POSTGRES_PASSWORD: ${MANAGER_DB_PASSWORD}
       POSTGRES_DB: app
   manager-redis:
-    image: resis:5.0-alpine
+    image: redis:5.0-alpine
     restart: always
     volumes:
       - manager-redis:/data
@@ -110,7 +109,7 @@ services:
     volumes:
       - manager-queue-redis:/data
   centrifugo:
-    image: ${REGISTRY_ADDRESS}/centrifugo:${IMAGE_TAG}
+    image: centrifugo/centrifugo:v2.2
     ulimits:
       nofile:
         soft: 65536

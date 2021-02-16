@@ -33,7 +33,7 @@ class PlanTest extends DbWebTestCase
     {
         $this->client->setServerParameters(AuthFixture::adminCredentials());
 
-        $date = new DateTimeImmutable('+1 day');
+        $date = (new DateTimeImmutable('+1 day'))->setTime(0, 0);
 
         $this->client->request(
             'PUT',

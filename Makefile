@@ -49,10 +49,16 @@ docker-build:
 docker-logs:
 	docker-compose logs -f
 
-manager-init: manager-composer-install manager-assets-install manager-oauth-keys manager-wait-db manager-migrations manager-fixtures manager-ready
+manager-init: manager-permissions manager-composer-install manager-assets-install manager-oauth-keys \
+	manager-wait-db manager-migrations manager-fixtures \
+	manager-ready
+
+manager-permissions:
+	docker run --rm -v ${PWD}/manager:/app --workdir=/app alpine sh -c 'mkdir -p var/cache var/log var/test ; chmod 777 var/cache var/log var/test'
 
 manager-clear:
 	docker run --rm -v ${PWD}/manager:/app --workdir=/app alpine rm -f .ready
+	docker run --rm -v ${PWD}/manager:/app -w /app alpine sh -c 'rm -rf var/cache/* var/log/* var/test/*'
 
 manager-composer-install:
 	docker-compose run --rm manager-php-cli composer install
@@ -112,39 +118,48 @@ manager-test-functional-coverage:
 manager-docs:
 	docker-compose run --rm manager-php-cli php bin/console api:docs --no-interaction
 
-build-production:
-	docker build --pull --file=manager/docker/production/nginx.docker --tag ${REGISTRY_ADDRESS}/manager-nginx:${IMAGE_TAG} manager
-	docker build --pull --file=manager/docker/production/php-fpm.docker --tag ${REGISTRY_ADDRESS}/manager-php-fpm:${IMAGE_TAG} manager
-	docker build --pull --file=manager/docker/production/php-cli.docker --tag ${REGISTRY_ADDRESS}/manager-php-cli:${IMAGE_TAG} manager
-	docker build --pull --file=manager/docker/production/postgres.docker --tag ${REGISTRY_ADDRESS}/manager-postgres:${IMAGE_TAG} manager
-	docker build --pull --file=manager/docker/production/redis.docker --tag ${REGISTRY_ADDRESS}/manager-redis:${IMAGE_TAG} manager
-	docker build --pull --file=centrifugo/docker/production/centrifugo.docker --tag ${REGISTRY_ADDRESS}/centrifugo:${IMAGE_TAG} centrifugo
+build:
+	docker build --pull --tag=${REGISTRY_ADDRESS}/manager-nginx:${IMAGE_TAG} --file=manager/docker/production/nginx.docker manager
+	docker build --pull --tag=${REGISTRY_ADDRESS}/manager-php-fpm:${IMAGE_TAG} --file=manager/docker/production/php-fpm.docker manager
+	docker build --pull --tag=${REGISTRY_ADDRESS}/manager-php-cli:${IMAGE_TAG} --file=manager/docker/production/php-cli.docker manager
 
-push-production:
+try-build:
+	 REGISTRY_ADDRESS=localhost IMAGE_TAG=0 make build
+
+push: push-manager
+
+push-manager:
 	docker push ${REGISTRY_ADDRESS}/manager-nginx:${IMAGE_TAG}
 	docker push ${REGISTRY_ADDRESS}/manager-php-fpm:${IMAGE_TAG}
 	docker push ${REGISTRY_ADDRESS}/manager-php-cli:${IMAGE_TAG}
-	docker push ${REGISTRY_ADDRESS}/manager-postgres:${IMAGE_TAG}
-	docker push ${REGISTRY_ADDRESS}/manager-redis:${IMAGE_TAG}
-	docker push ${REGISTRY_ADDRESS}/centrifugo:${IMAGE_TAG}
 
-deploy-production:
-	ssh -o StrictHostKeyChecking=no ${PRODUCTION_HOST} -p ${PRODUCTION_PORT} 'rm -rf docker-compose.yml .env'
-	scp -o StrictHostKeyChecking=no -P ${PRODUCTION_PORT} docker-compose-prod.yml ${PRODUCTION_HOST}:docker-compose.yml
-	ssh -o StrictHostKeyChecking=no ${PRODUCTION_HOST} -p ${PRODUCTION_PORT} 'echo "REGISTRY_ADDRESS=${REGISTRY_ADDRESS}" >> .env'
-	ssh -o StrictHostKeyChecking=no ${PRODUCTION_HOST} -p ${PRODUCTION_PORT} 'echo "IMAGE_TAG=${IMAGE_TAG}" >> .env'
-	ssh -o StrictHostKeyChecking=no ${PRODUCTION_HOST} -p ${PRODUCTION_PORT} 'echo "MANAGER_APP_SECRET=${MANAGER_APP_SECRET}" >> .env'
-	ssh -o StrictHostKeyChecking=no ${PRODUCTION_HOST} -p ${PRODUCTION_PORT} 'echo "MANAGER_DB_PASSWORD=${MANAGER_DB_PASSWORD}" >> .env'
-	ssh -o StrictHostKeyChecking=no ${PRODUCTION_HOST} -p ${PRODUCTION_PORT} 'echo "MANAGER_REDIS_PASSWORD=${MANAGER_REDIS_PASSWORD}" >> .env'
-	ssh -o StrictHostKeyChecking=no ${PRODUCTION_HOST} -p ${PRODUCTION_PORT} 'echo "MANAGER_MAILER_URL=${MANAGER_MAILER_URL}" >> .env'
-	ssh -o StrictHostKeyChecking=no ${PRODUCTION_HOST} -p ${PRODUCTION_PORT} 'echo "MANAGER_OAUTH_FACEBOOK_SECRET=${MANAGER_OAUTH_FACEBOOK_SECRET}" >> .env'
-	ssh -o StrictHostKeyChecking=no ${PRODUCTION_HOST} -p ${PRODUCTION_PORT} 'echo "STORAGE_FTP_HOST=${STORAGE_FTP_HOST}" >> .env'
-	ssh -o StrictHostKeyChecking=no ${PRODUCTION_HOST} -p ${PRODUCTION_PORT} 'echo "STORAGE_FTP_USERNAME=${STORAGE_FTP_USERNAME}" >> .env'
-	ssh -o StrictHostKeyChecking=no ${PRODUCTION_HOST} -p ${PRODUCTION_PORT} 'echo "STORAGE_FTP_PASSWORD=${STORAGE_FTP_PASSWORD}" >> .env'
-	ssh -o StrictHostKeyChecking=no ${PRODUCTION_HOST} -p ${PRODUCTION_PORT} 'echo "CENTRIFUGO_WS_HOST=${CENTRIFUGO_WS_HOST}" >> .env'
-	ssh -o StrictHostKeyChecking=no ${PRODUCTION_HOST} -p ${PRODUCTION_PORT} 'echo "CENTRIFUGO_API_KEY=${CENTRIFUGO_API_KEY}" >> .env'
-	ssh -o StrictHostKeyChecking=no ${PRODUCTION_HOST} -p ${PRODUCTION_PORT} 'echo "CENTRIFUGO_SECRET=${CENTRIFUGO_SECRET}" >> .env'
-	ssh -o StrictHostKeyChecking=no ${PRODUCTION_HOST} -p ${PRODUCTION_PORT} 'docker-compose pull'
-	ssh -o StrictHostKeyChecking=no ${PRODUCTION_HOST} -p ${PRODUCTION_PORT} 'docker-compose --build -d'
-	ssh -o StrictHostKeyChecking=no ${PRODUCTION_HOST} -p ${PRODUCTION_PORT} 'until docker-compose exec -T manager-postgres pg_isready --timeout=0 --dbname=app ; do sleep 1 ; done'
-	ssh -o StrictHostKeyChecking=no ${PRODUCTION_HOST} -p ${PRODUCTION_PORT} 'docker-compose run --rm manager-php-cli php bin/console doctrine:migrations:migrate --no-interaction'
+deploy:
+	ssh -o StrictHostKeyChecking=no deploy@${HOST} -p ${PORT} 'rm -rf manager_${BUILD_NUMBER}'
+	ssh -o StrictHostKeyChecking=no deploy@${HOST} -p ${PORT} 'mkdir manager_${BUILD_NUMBER}'
+	scp -o StrictHostKeyChecking=no -P ${PORT} docker-compose-prod.yml deploy@${HOST}:manager_${BUILD_NUMBER}/docker-compose.yml
+	ssh -o StrictHostKeyChecking=no deploy@${HOST} -p ${PORT} 'cd manager_${BUILD_NUMBER} && echo "COMPOSE_PROJECT_NAME=project-manager" >> .env'
+	ssh -o StrictHostKeyChecking=no deploy@${HOST} -p ${PORT} 'cd manager_${BUILD_NUMBER} && echo "REGISTRY_ADDRESS=${REGISTRY_ADDRESS}" >> .env'
+	ssh -o StrictHostKeyChecking=no deploy@${HOST} -p ${PORT} 'cd manager_${BUILD_NUMBER} && echo "IMAGE_TAG=${IMAGE_TAG}" >> .env'
+	ssh -o StrictHostKeyChecking=no deploy@${HOST} -p ${PORT} 'cd manager_${BUILD_NUMBER} && echo "MANAGER_APP_SECRET=${MANAGER_APP_SECRET}" >> .env'
+	ssh -o StrictHostKeyChecking=no deploy@${HOST} -p ${PORT} 'cd manager_${BUILD_NUMBER} && echo "MANAGER_DB_PASSWORD=${MANAGER_DB_PASSWORD}" >> .env'
+	ssh -o StrictHostKeyChecking=no deploy@${HOST} -p ${PORT} 'cd manager_${BUILD_NUMBER} && echo "MANAGER_REDIS_PASSWORD=${MANAGER_REDIS_PASSWORD}" >> .env'
+	ssh -o StrictHostKeyChecking=no deploy@${HOST} -p ${PORT} 'cd manager_${BUILD_NUMBER} && echo "MANAGER_MAILER_URL=${MANAGER_MAILER_URL}" >> .env'
+	ssh -o StrictHostKeyChecking=no deploy@${HOST} -p ${PORT} 'cd manager_${BUILD_NUMBER} && echo "MANAGER_OAUTH_FACEBOOK_SECRET=${MANAGER_OAUTH_FACEBOOK_SECRET}" >> .env'
+	ssh -o StrictHostKeyChecking=no deploy@${HOST} -p ${PORT} 'cd manager_${BUILD_NUMBER} && echo "STORAGE_BASE_URL=${STORAGE_BASE_URL}" >> .env'
+	ssh -o StrictHostKeyChecking=no deploy@${HOST} -p ${PORT} 'cd manager_${BUILD_NUMBER} && echo "STORAGE_FTP_HOST=${STORAGE_FTP_HOST}" >> .env'
+	ssh -o StrictHostKeyChecking=no deploy@${HOST} -p ${PORT} 'cd manager_${BUILD_NUMBER} && echo "STORAGE_FTP_USERNAME=${STORAGE_FTP_USERNAME}" >> .env'
+	ssh -o StrictHostKeyChecking=no deploy@${HOST} -p ${PORT} 'cd manager_${BUILD_NUMBER} && echo "STORAGE_FTP_PASSWORD=${STORAGE_FTP_PASSWORD}" >> .env'
+	ssh -o StrictHostKeyChecking=no deploy@${HOST} -p ${PORT} 'cd manager_${BUILD_NUMBER} && echo "CENTRIFUGO_WS_HOST=${CENTRIFUGO_WS_HOST}" >> .env'
+	ssh -o StrictHostKeyChecking=no deploy@${HOST} -p ${PORT} 'cd manager_${BUILD_NUMBER} && echo "CENTRIFUGO_API_KEY=${CENTRIFUGO_API_KEY}" >> .env'
+	ssh -o StrictHostKeyChecking=no deploy@${HOST} -p ${PORT} 'cd manager_${BUILD_NUMBER} && echo "CENTRIFUGO_SECRET=${CENTRIFUGO_SECRET}" >> .env'
+	ssh -o StrictHostKeyChecking=no deploy@${HOST} -p ${PORT} 'cd manager_${BUILD_NUMBER} && echo "OAUTH_ENCRYPTION_KEY=${OAUTH_ENCRYPTION_KEY}" >> .env'
+	ssh -o StrictHostKeyChecking=no deploy@${HOST} -p ${PORT} 'cd manager_${BUILD_NUMBER} && docker-compose pull'
+	ssh -o StrictHostKeyChecking=no deploy@${HOST} -p ${PORT} 'cd manager_${BUILD_NUMBER} && docker-compose up --build -d manager-postgres manager-php-cli'
+	ssh -o StrictHostKeyChecking=no deploy@${HOST} -p ${PORT} 'cd manager_${BUILD_NUMBER} && until docker-compose exec -T manager-postgres pg_isready --timeout=0 --dbname=app ; do sleep 1 ; done'
+	ssh -o StrictHostKeyChecking=no deploy@${HOST} -p ${PORT} 'cd manager_${BUILD_NUMBER} && docker-compose run --rm manager-php-cli php bin/console doctrine:migrations:migrate --no-interaction'
+	ssh -o StrictHostKeyChecking=no deploy@${HOST} -p ${PORT} 'cd manager_${BUILD_NUMBER} && docker-compose up --build -d --remove-orphans'
+	ssh -o StrictHostKeyChecking=no deploy@${HOST} -p ${PORT} 'rm -f manager'
+	ssh -o StrictHostKeyChecking=no deploy@${HOST} -p ${PORT} 'ln -sr manager_${BUILD_NUMBER} manager'
+
+validate-jenkins:
+	curl -u ${USER} -XPOST -F "jenkinsfile=<Jenkinsfile" ${HOST}/pipeline-model-converter/validate

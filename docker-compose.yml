@@ -1,4 +1,4 @@
-version: '3.7'
+version: '3.9'
 services:
   manager-nginx:
     build:
@@ -9,7 +9,7 @@ services:
     depends_on:
       - manager-php-fpm
     ports:
-      - "8080:80"
+      - "8001:80"
   manager-php-fpm:
     build:
       context: ./manager/docker/development
@@ -112,7 +112,7 @@ services:
   mailer:
     image: mailhog/mailhog
     ports:
-      - "8082:8025"
+      - "8002:8025"
   centrifugo:
     image: centrifugo/centrifugo:v2.2
     ulimits:
@@ -125,7 +125,7 @@ services:
     volumes:
       - ./centrifugo/docker/development/centrifugo:/centrifugo
     ports:
-      - "8083:8000"
+      - "8003:8000"
     command: centrifugo --admin --admin_insecure
 
 volumes:

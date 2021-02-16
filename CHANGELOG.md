@@ -1,7 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## [0.8.2] - 2019-02-09
+## [0.9.0] - 2021-02-16
+### Added
+- jenkins-ci
+
+## [0.8.2] - 2021-02-09
 ### Updated
 - npm libraries
 

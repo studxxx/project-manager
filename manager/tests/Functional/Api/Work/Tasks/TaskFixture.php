@@ -15,7 +15,7 @@ use App\Tests\Functional\Api\Work\MemberFixture;
 use DateTimeImmutable;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 
 class TaskFixture extends Fixture implements DependentFixtureInterface
 {
@@ -23,7 +23,7 @@ class TaskFixture extends Fixture implements DependentFixtureInterface
     public const TASK_IN_PROJECT_WITHOUT_USER = 10000002;
     public const TASK_IN_PROJECT_WITH_USER_WITH_PLAN = 10000003;
 
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
         /** @var Member $adminMember */
         $adminMember = $this->getReference(MemberFixture::REFERENCE_MEMBER_ADMIN);

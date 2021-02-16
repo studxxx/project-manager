@@ -8,7 +8,7 @@ use App\Model\Work\Entity\Projects\Role\Id;
 use App\Model\Work\Entity\Projects\Role\Permission;
 use App\Model\Work\Entity\Projects\Role\Role;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use Exception;
 
 class RoleFixture extends Fixture
