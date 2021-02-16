@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Functional\Api;
 
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use Trikoder\Bundle\OAuth2Bundle\Model\Client;
 
 class ClientFixture extends Fixture

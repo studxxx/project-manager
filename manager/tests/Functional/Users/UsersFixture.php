@@ -9,7 +9,7 @@ use App\Model\User\Entity\User\Id;
 use App\Model\User\Entity\User\Name;
 use App\Tests\Builder\User\UserBuilder;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use Exception;
 
 class UsersFixture extends Fixture
