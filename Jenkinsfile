@@ -31,11 +31,17 @@ pipeline {
       }
     }
     stage("Build") {
+      when {
+        branch "master"
+      }
       steps {
         sh "make build"
       }
     }
     stage("Push") {
+      when {
+        branch "master"
+      }
       steps {
         withCredentials([
           usernamePassword(
@@ -50,6 +56,9 @@ pipeline {
       }
     }
     stage("Prod") {
+      when {
+        branch "master"
+      }
       steps {
         withCredentials([
           string(credentialsId: 'PRODUCTION_HOST', variable: 'HOST'),
