@@ -10,8 +10,8 @@ class HomeTest extends DbWebTestCase
     {
         $this->client->request('GET', '/');
 
-        $this->assertSame(302, $this->client->getResponse()->getStatusCode());
-        $this->assertSame('http://localhost/login', $this->client->getResponse()->headers->get('Location'));
+        self::assertSame(302, $this->client->getResponse()->getStatusCode());
+        self::assertSame('http://localhost/login', $this->client->getResponse()->headers->get('Location'));
     }
 
     public function testUser(): void
@@ -19,8 +19,8 @@ class HomeTest extends DbWebTestCase
         $this->client->setServerParameters(AuthFixture::userCredentials());
         $crawler = $this->client->request('GET', '/');
 
-        $this->assertSame(200, $this->client->getResponse()->getStatusCode());
-        $this->assertContains('Home', $crawler->filter('title')->text());
+        self::assertSame(200, $this->client->getResponse()->getStatusCode());
+        self::assertStringContainsString('Home', $crawler->filter('title')->text());
     }
 
     public function testAdmin(): void
@@ -28,7 +28,7 @@ class HomeTest extends DbWebTestCase
         $this->client->setServerParameters(AuthFixture::adminCredentials());
         $crawler = $this->client->request('GET', '/');
 
-        $this->assertSame(200, $this->client->getResponse()->getStatusCode());
-        $this->assertContains('Home', $crawler->filter('title')->text());
+        self::assertSame(200, $this->client->getResponse()->getStatusCode());
+        self::assertStringContainsString('Home', $crawler->filter('title')->text());
     }
 }

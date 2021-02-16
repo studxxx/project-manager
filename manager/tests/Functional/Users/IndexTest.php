@@ -13,8 +13,8 @@ class IndexTest extends DbWebTestCase
     {
         $this->client->request('GET', '/users');
 
-        $this->assertSame(302, $this->client->getResponse()->getStatusCode());
-        $this->assertSame('http://localhost/login', $this->client->getResponse()->headers->get('Location'));
+        self::assertSame(302, $this->client->getResponse()->getStatusCode());
+        self::assertSame('http://localhost/login', $this->client->getResponse()->headers->get('Location'));
     }
 
     public function testUser(): void
@@ -22,7 +22,7 @@ class IndexTest extends DbWebTestCase
         $this->client->setServerParameters(AuthFixture::userCredentials());
         $this->client->request('GET', '/users');
 
-        $this->assertSame(403, $this->client->getResponse()->getStatusCode());
+        self::assertSame(403, $this->client->getResponse()->getStatusCode());
     }
 
     public function testAdmin(): void
@@ -30,7 +30,7 @@ class IndexTest extends DbWebTestCase
         $this->client->setServerParameters(AuthFixture::adminCredentials());
         $crawler = $this->client->request('GET', '/users');
 
-        $this->assertSame(200, $this->client->getResponse()->getStatusCode());
-        $this->assertContains('Users', $crawler->filter('title')->text());
+        self::assertSame(200, $this->client->getResponse()->getStatusCode());
+        self::assertStringContainsString('Users', $crawler->filter('title')->text());
     }
 }

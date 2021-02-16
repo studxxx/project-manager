@@ -5,9 +5,12 @@ declare(strict_types=1);
 namespace App\Tests\Functional\OAuth;
 
 use App\Tests\Functional\DbWebTestCase;
+use DMS\PHPUnitExtensions\ArraySubset\ArraySubsetAsserts;
 
 class PasswordTest extends DbWebTestCase
 {
+    use ArraySubsetAsserts;
+
     private const URI = '/token';
 
     public function testMethod(): void

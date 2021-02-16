@@ -6,9 +6,12 @@ namespace App\Tests\Functional\Api\Work\Tasks;
 
 use App\Tests\Functional\AuthFixture;
 use App\Tests\Functional\DbWebTestCase;
+use DMS\PHPUnitExtensions\ArraySubset\ArraySubsetAsserts;
 
 class ShowTest extends DbWebTestCase
 {
+    use ArraySubsetAsserts;
+
     private const URI = '/api/work/tasks/%s';
 
     public function testAdmin(): void

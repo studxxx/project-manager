@@ -13,8 +13,8 @@ class CreateTest extends DbWebTestCase
     {
         $this->client->request('GET', '/users/create');
 
-        $this->assertSame(302, $this->client->getResponse()->getStatusCode());
-        $this->assertSame('http://localhost/login', $this->client->getResponse()->headers->get('Location'));
+        self::assertSame(302, $this->client->getResponse()->getStatusCode());
+        self::assertSame('http://localhost/login', $this->client->getResponse()->headers->get('Location'));
     }
 
     public function testUser(): void
@@ -22,7 +22,7 @@ class CreateTest extends DbWebTestCase
         $this->client->setServerParameters(AuthFixture::userCredentials());
         $this->client->request('GET', '/users/create');
 
-        $this->assertSame(403, $this->client->getResponse()->getStatusCode());
+        self::assertSame(403, $this->client->getResponse()->getStatusCode());
     }
 
     public function testGet(): void
@@ -30,8 +30,8 @@ class CreateTest extends DbWebTestCase
         $this->client->setServerParameters(AuthFixture::adminCredentials());
         $crawler = $this->client->request('GET', '/users/create');
 
-        $this->assertSame(200, $this->client->getResponse()->getStatusCode());
-        $this->assertContains('Users', $crawler->filter('title')->text());
+        self::assertSame(200, $this->client->getResponse()->getStatusCode());
+        self::assertStringContainsString('Users', $crawler->filter('title')->text());
     }
 
     public function testCreate(): void
@@ -45,14 +45,14 @@ class CreateTest extends DbWebTestCase
             'form[email]' => 'tom-bent@app.test',
         ]);
 
-        $this->assertSame(302, $this->client->getResponse()->getStatusCode());
+        self::assertSame(302, $this->client->getResponse()->getStatusCode());
 
         $crawler = $this->client->followRedirect();
 
-        $this->assertSame(200, $this->client->getResponse()->getStatusCode());
-        $this->assertContains('Users', $crawler->filter('title')->text());
-        $this->assertContains('Tom Bent', $crawler->filter('body')->text());
-        $this->assertContains('tom-bent@app.test', $crawler->filter('body')->text());
+        self::assertSame(200, $this->client->getResponse()->getStatusCode());
+        self::assertStringContainsString('Users', $crawler->filter('title')->text());
+        self::assertStringContainsString('Tom Bent', $crawler->filter('body')->text());
+        self::assertStringContainsString('tom-bent@app.test', $crawler->filter('body')->text());
     }
 
     public function testNotValid(): void
@@ -66,13 +66,13 @@ class CreateTest extends DbWebTestCase
             'form[email]' => 'not-email',
         ]);
 
-        $this->assertSame(200, $this->client->getResponse()->getStatusCode());
+        self::assertSame(200, $this->client->getResponse()->getStatusCode());
 
-        $this->assertContains('This value should not be blank.', $crawler
+        self::assertStringContainsString('This value should not be blank.', $crawler
             ->filter('#form_firstName')->parents()->first()->filter('.form-error-message')->text());
-        $this->assertContains('This value should not be blank.', $crawler
+        self::assertStringContainsString('This value should not be blank.', $crawler
             ->filter('#form_lastName')->parents()->first()->filter('.form-error-message')->text());
-        $this->assertContains('This value is not a valid email address.', $crawler
+        self::assertStringContainsString('This value is not a valid email address.', $crawler
             ->filter('#form_email')->parents()->first()->filter('.form-error-message')->text());
     }
 
@@ -87,9 +87,9 @@ class CreateTest extends DbWebTestCase
             'form[email]' => 'existing-user@app.test',
         ]);
 
-        $this->assertSame(200, $this->client->getResponse()->getStatusCode());
+        self::assertSame(200, $this->client->getResponse()->getStatusCode());
 
-        $this->assertContains('User with this email already exists.', $crawler
+        self::assertStringContainsString('User with this email already exists.', $crawler
             ->filter('.alert.alert-danger')->text());
     }
 }

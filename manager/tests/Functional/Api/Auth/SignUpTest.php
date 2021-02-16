@@ -5,9 +5,12 @@ declare(strict_types=1);
 namespace App\Tests\Functional\Api\Auth;
 
 use App\Tests\Functional\DbWebTestCase;
+use DMS\PHPUnitExtensions\ArraySubset\ArraySubsetAsserts;
 
 class SignUpTest extends DbWebTestCase
 {
+    use ArraySubsetAsserts;
+
     private const URI = '/api/auth/signup';
 
     public function testGet(): void

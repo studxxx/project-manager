@@ -14,8 +14,8 @@ class ShowTest extends DbWebTestCase
     {
         $this->client->request('GET', '/users/' . UsersFixture::EXISTING_ID);
 
-        $this->assertSame(302, $this->client->getResponse()->getStatusCode());
-        $this->assertSame('http://localhost/login', $this->client->getResponse()->headers->get('Location'));
+        self::assertSame(302, $this->client->getResponse()->getStatusCode());
+        self::assertSame('http://localhost/login', $this->client->getResponse()->headers->get('Location'));
     }
 
     public function testUser(): void
@@ -23,7 +23,7 @@ class ShowTest extends DbWebTestCase
         $this->client->setServerParameters(AuthFixture::userCredentials());
         $this->client->request('GET', '/users/' . UsersFixture::EXISTING_ID);
 
-        $this->assertSame(403, $this->client->getResponse()->getStatusCode());
+        self::assertSame(403, $this->client->getResponse()->getStatusCode());
     }
 
     public function testGet(): void
@@ -31,9 +31,9 @@ class ShowTest extends DbWebTestCase
         $this->client->setServerParameters(AuthFixture::adminCredentials());
         $crawler = $this->client->request('GET', '/users/' . UsersFixture::EXISTING_ID);
 
-        $this->assertSame(200, $this->client->getResponse()->getStatusCode());
-        $this->assertContains('Users', $crawler->filter('title')->text());
-        $this->assertContains('Show User', $crawler->filter('table')->text());
+        self::assertSame(200, $this->client->getResponse()->getStatusCode());
+        self::assertStringContainsString('Users', $crawler->filter('title')->text());
+        self::assertStringContainsString('Show User', $crawler->filter('table')->text());
     }
 
     public function testNotFound(): void
@@ -41,6 +41,6 @@ class ShowTest extends DbWebTestCase
         $this->client->setServerParameters(AuthFixture::adminCredentials());
         $this->client->request('GET', '/users/' . Id::next()->getValue());
 
-        $this->assertSame(404, $this->client->getResponse()->getStatusCode());
+        self::assertSame(404, $this->client->getResponse()->getStatusCode());
     }
 }

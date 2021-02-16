@@ -7,9 +7,12 @@ namespace App\Tests\Functional\Api\Work\Tasks;
 use App\Tests\Functional\AuthFixture;
 use App\Tests\Functional\DbWebTestCase;
 use DateTimeImmutable;
+use DMS\PHPUnitExtensions\ArraySubset\ArraySubsetAsserts;
 
 class PlanTest extends DbWebTestCase
 {
+    use ArraySubsetAsserts;
+
     private const URI = '/api/work/tasks/%s/plan';
     private const SHOW_URI = '/api/work/tasks/%s';
 

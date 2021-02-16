@@ -7,9 +7,12 @@ namespace App\Tests\Functional\Api;
 use App\Model\User\Entity\User\Id;
 use App\Tests\Functional\Api\Profile\ProfileFixture;
 use App\Tests\Functional\DbWebTestCase;
+use DMS\PHPUnitExtensions\ArraySubset\ArraySubsetAsserts;
 
 class NameTest extends DbWebTestCase
 {
+    use ArraySubsetAsserts;
+
     private const URI = '/api/profile/name';
 
     public function testGet(): void
