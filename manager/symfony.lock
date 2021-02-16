@@ -312,6 +312,9 @@
     "ramsey/uuid": {
         "version": "3.8.0"
     },
+    "roave/security-advisories": {
+        "version": "dev-master"
+    },
     "sebastian/cli-parser": {
         "version": "1.0.1"
     },
