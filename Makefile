@@ -88,6 +88,9 @@ manager-migrations:
 manager-fixtures:
 	docker-compose run --rm manager-php-cli ./bin/console doctrine:fixtures:load --no-interaction
 
+manager-validate-schema:
+	docker-compose run --rm manager-php-cli composer app doctrine:schema:validate
+
 manager-cache-clear:
 	docker-compose run --rm manager-php-cli ./bin/console cache:clear
 
