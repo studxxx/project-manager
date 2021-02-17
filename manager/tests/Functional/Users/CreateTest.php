@@ -31,7 +31,7 @@ class CreateTest extends DbWebTestCase
         $crawler = $this->client->request('GET', '/users/create');
 
         self::assertSame(200, $this->client->getResponse()->getStatusCode());
-        self::assertStringContainsString('Users', $crawler->filter('title')->text());
+        self::assertStringContainsString('Users', $crawler->filter('title')->text(null, false));
     }
 
     public function testCreate(): void
@@ -50,9 +50,9 @@ class CreateTest extends DbWebTestCase
         $crawler = $this->client->followRedirect();
 
         self::assertSame(200, $this->client->getResponse()->getStatusCode());
-        self::assertStringContainsString('Users', $crawler->filter('title')->text());
-        self::assertStringContainsString('Tom Bent', $crawler->filter('body')->text());
-        self::assertStringContainsString('tom-bent@app.test', $crawler->filter('body')->text());
+        self::assertStringContainsString('Users', $crawler->filter('title')->text(null, false));
+        self::assertStringContainsString('Tom Bent', $crawler->filter('body')->text(null, false));
+        self::assertStringContainsString('tom-bent@app.test', $crawler->filter('body')->text(null, false));
     }
 
     public function testNotValid(): void
@@ -69,11 +69,11 @@ class CreateTest extends DbWebTestCase
         self::assertSame(200, $this->client->getResponse()->getStatusCode());
 
         self::assertStringContainsString('This value should not be blank.', $crawler
-            ->filter('#form_firstName')->parents()->first()->filter('.form-error-message')->text());
+            ->filter('#form_firstName')->parents()->first()->filter('.form-error-message')->text(null, false));
         self::assertStringContainsString('This value should not be blank.', $crawler
-            ->filter('#form_lastName')->parents()->first()->filter('.form-error-message')->text());
+            ->filter('#form_lastName')->parents()->first()->filter('.form-error-message')->text(null, false));
         self::assertStringContainsString('This value is not a valid email address.', $crawler
-            ->filter('#form_email')->parents()->first()->filter('.form-error-message')->text());
+            ->filter('#form_email')->parents()->first()->filter('.form-error-message')->text(null, false));
     }
 
     public function testExists(): void
@@ -90,6 +90,6 @@ class CreateTest extends DbWebTestCase
         self::assertSame(200, $this->client->getResponse()->getStatusCode());
 
         self::assertStringContainsString('User with this email already exists.', $crawler
-            ->filter('.alert.alert-danger')->text());
+            ->filter('.alert.alert-danger')->text(null, false));
     }
 }
