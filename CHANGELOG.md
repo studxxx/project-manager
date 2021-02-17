@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [0.10.0] - 2021-02-17
+### Updated
+- framework to 4.4
+- php to 7.4
+
 ## [0.9.0] - 2021-02-16
 ### Added
 - jenkins-ci
