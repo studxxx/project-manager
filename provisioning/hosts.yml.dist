@@ -1,0 +1,28 @@
+all:
+  children:
+    site:
+      hosts:
+        server:
+          ansible_connection: ssh
+          ansible_user: root
+          ansible_host: 192.168.7.108
+          ansible_port: 22
+#        server_test:
+#          ansible_connection: ssh
+#          ansible_user: root
+#          ansible_host: 192.168.7.69
+#          ansible_port: 22
+#    db:
+#      hosts:
+#        server_db:
+#          ansible_connection: ssh
+#          ansible_user: root
+#          ansible_host: 192.168.7.69
+#          ansible_port: 22
+#    queue:
+#      hosts:
+#        server_queue:
+#          ansible_connection: ssh
+#          ansible_user: root
+#          ansible_host: 192.168.7.69
+#          ansible_port: 22
