@@ -93,6 +93,10 @@ manager-validate-schema:
 
 manager-lint:
 	docker-compose run --rm manager-php-cli composer lint
+	docker-compose run --rm manager-php-cli composer cs-check
+
+manager-lint-fix:
+	docker-compose run --rm manager-php-cli composer cs-fix
 
 manager-cache-clear:
 	docker-compose run --rm manager-php-cli ./bin/console cache:clear
