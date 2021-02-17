@@ -5,9 +5,12 @@ declare(strict_types=1);
 namespace App\Tests\Functional\OAuth;
 
 use App\Tests\Functional\DbWebTestCase;
+use DMS\PHPUnitExtensions\ArraySubset\ArraySubsetAsserts;
 
 class PasswordTest extends DbWebTestCase
 {
+    use ArraySubsetAsserts;
+
     private const URI = '/token';
 
     public function testMethod(): void
@@ -56,6 +59,6 @@ class PasswordTest extends DbWebTestCase
             'client_secret' => 'secret',
         ]);
 
-        self::assertEquals(401, $this->client->getResponse()->getStatusCode());
+        self::assertEquals(400, $this->client->getResponse()->getStatusCode());
     }
 }
