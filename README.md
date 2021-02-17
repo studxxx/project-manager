@@ -118,4 +118,4 @@ https://github.com/swagger-api/swagger-ui
 https://github.com/fesor/request-objects
 
 [CHANGELOG]: ./CHANGELOG.md
-[version-badge]: https://img.shields.io/badge/version-0.8.2-blue.svg
+[version-badge]: https://img.shields.io/badge/version-0.9.0-blue.svg
