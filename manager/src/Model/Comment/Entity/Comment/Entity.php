@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 namespace App\Model\Comment\Entity\Comment;
+
 use Doctrine\ORM\Mapping as ORM;
 use Webmozart\Assert\Assert;
 

@@ -32,7 +32,7 @@ class ResetTokenSender
      * @throws Error\RuntimeError
      * @throws Error\SyntaxError
      */
-    public function send(Email$email, ResetToken $token): void
+    public function send(Email $email, ResetToken $token): void
     {
         $message = (new Swift_Message('Password resetting'))
             ->setTo($email->getValue())

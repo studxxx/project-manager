@@ -9,14 +9,11 @@ use Doctrine\DBAL\FetchMode;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 use Knp\Component\Pager\PaginatorInterface;
-use function GuzzleHttp\Psr7\str;
 
 class ActionFetcher
 {
-    /** @var Connection */
-    private $connection;
-    /** @var PaginatorInterface */
-    private $paginator;
+    private Connection $connection;
+    private PaginatorInterface $paginator;
 
     public function __construct(Connection $connection, PaginatorInterface $paginator)
     {

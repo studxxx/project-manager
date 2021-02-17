@@ -31,7 +31,7 @@ class SignUpConfirmTokenSender
      * @throws Error\RuntimeError
      * @throws Error\SyntaxError
      */
-    public function send(Email$email, string $token): void
+    public function send(Email $email, string $token): void
     {
         $message = (new Swift_Message('Sign Up Confirmation'))
             ->setTo($email->getValue())

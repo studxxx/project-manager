@@ -100,10 +100,12 @@ class CommentController extends AbstractController
 
     private function checkCommentIsForTask(Task $task, Comment $comment): void
     {
-        if (!(
+        if (
+            !(
             $comment->getEntity()->getType() === Task::class
             && (int)$comment->getEntity()->getId() === $task->getId()->getValue()
-        )) {
+            )
+        ) {
             throw $this->createNotFoundException();
         }
     }

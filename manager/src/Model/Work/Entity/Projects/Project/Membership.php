@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 namespace App\Model\Work\Entity\Projects\Project;
+
 use App\Model\Work\Entity\Members\Member\Id as MemberId;
 use App\Model\Work\Entity\Members\Member\Member;
 use App\Model\Work\Entity\Projects\Project\Department\Department;
