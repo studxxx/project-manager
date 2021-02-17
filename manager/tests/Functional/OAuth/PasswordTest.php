@@ -59,6 +59,6 @@ class PasswordTest extends DbWebTestCase
             'client_secret' => 'secret',
         ]);
 
-        self::assertEquals(401, $this->client->getResponse()->getStatusCode());
+        self::assertEquals(400, $this->client->getResponse()->getStatusCode());
     }
 }
