@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 namespace App\Model\Work\Entity\Members\Member;
+
 use App\Model\Work\Entity\Members\Group\Group;
 use Doctrine\ORM\Mapping as ORM;
 use DomainException;

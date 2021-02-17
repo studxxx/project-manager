@@ -37,14 +37,16 @@ class TaskFetcher
 
     public function all(Filter $filter, int $page, int $size, ?string $sort, ?string $direction): PaginationInterface
     {
-        if (!in_array(
-            $sort,
-            [
+        if (
+            !in_array(
+                $sort,
+                [
                 null, 't.id', 't.date', 'author_name', 'project_name', 'name',
                 't.type', 't.plan_date', 't.progress', 't.priority', 't.status'
-            ],
-            true
-        )) {
+                ],
+                true
+            )
+        ) {
             throw new \UnexpectedValueException('Cannot sort by ' . $sort);
         }
 

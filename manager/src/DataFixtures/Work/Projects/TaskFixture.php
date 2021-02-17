@@ -46,10 +46,12 @@ class TaskFixture extends Fixture implements DependentFixtureInterface
                 $task->plan($actor, $date, $date->modify("+{$faker->numberBetween(1, 30)}days"));
             }
             $memberships = $project->getMemberships();
-            foreach ($faker->randomElements(
-                $memberships,
-                $faker->numberBetween(0, count($memberships))
-            ) as $membership) {
+            foreach (
+                $faker->randomElements(
+                    $memberships,
+                    $faker->numberBetween(0, count($memberships))
+                ) as $membership
+            ) {
                 /** @var Membership $membership */
                 $task->assignExecutor($actor, $date, $membership->getMember());
             }

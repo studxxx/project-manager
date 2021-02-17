@@ -24,10 +24,10 @@ final class Version20190627051400 extends AbstractMigration
 
         $this->addSql('ALTER TABLE user_users ADD name_first VARCHAR(255) DEFAULT NULL');
         $this->addSql('ALTER TABLE user_users ADD name_last VARCHAR(255) DEFAULT NULL');
-        
+
         $this->addSql('UPDATE user_users SET name_first = \'\'');
         $this->addSql('UPDATE user_users SET name_last = \'\'');
-        
+
         $this->addSql('ALTER TABLE user_users ALTER name_first SET NOT NULL');
         $this->addSql('ALTER TABLE user_users ALTER name_last SET NOT NULL');
     }

@@ -41,5 +41,4 @@ class Form extends AbstractType
             'csrf_protection' => false
         ]);
     }
-
 }
