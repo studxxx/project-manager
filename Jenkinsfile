@@ -11,6 +11,20 @@ pipeline {
         sh "make init"
       }
     }
+    stage("Valid") {
+      steps {
+        sh "make manager-validate-schema"
+      }
+    }
+    stage("Lint") {
+      parallel {
+        stage("Manager Backend") {
+          steps {
+            sh "make manager-lint"
+          }
+        }
+      }
+    }
     stage("Test") {
       parallel {
         stage("Manager") {
