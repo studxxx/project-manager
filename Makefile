@@ -91,6 +91,9 @@ manager-fixtures:
 manager-validate-schema:
 	docker-compose run --rm manager-php-cli composer app doctrine:schema:validate
 
+manager-lint:
+	docker-compose run --rm manager-php-cli composer lint
+
 manager-cache-clear:
 	docker-compose run --rm manager-php-cli ./bin/console cache:clear
 
