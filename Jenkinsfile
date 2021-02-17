@@ -11,6 +11,15 @@ pipeline {
         sh "make init"
       }
     }
+    stage("Lint") {
+      parallel {
+        stage("Manager Backend") {
+          steps {
+            sh "make manager-lint"
+          }
+        }
+      }
+    }
     stage("Test") {
       parallel {
         stage("Manager") {
