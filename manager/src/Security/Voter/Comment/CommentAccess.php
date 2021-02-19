@@ -13,9 +13,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class CommentAccess extends Voter
 {
-    const MANAGE = 'manage';
-    /** @var AuthorizationCheckerInterface */
-    private $security;
+    public const MANAGE = 'manage';
+    private AuthorizationCheckerInterface $security;
 
     public function __construct(AuthorizationCheckerInterface $security)
     {
