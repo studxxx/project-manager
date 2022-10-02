@@ -21,9 +21,9 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
 {
     use TargetPathTrait;
 
-    private $urlGenerator;
-    private $csrfTokenManager;
-    private $hasher;
+    private UrlGeneratorInterface $urlGenerator;
+    private CsrfTokenManagerInterface $csrfTokenManager;
+    private PasswordHasher $hasher;
 
     public function __construct(
         UrlGeneratorInterface $urlGenerator,
@@ -35,13 +35,13 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
         $this->hasher = $hasher;
     }
 
-    public function supports(Request $request)
+    public function supports(Request $request): bool
     {
         return 'auth.login' === $request->attributes->get('_route')
             && $request->isMethod('POST');
     }
 
-    public function getCredentials(Request $request)
+    public function getCredentials(Request $request): array
     {
         $credentials = [
             'email' => $request->request->get('email'),
@@ -89,7 +89,7 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
         return new RedirectResponse($this->urlGenerator->generate('home'));
     }
 
-    protected function getLoginUrl()
+    protected function getLoginUrl(): string
     {
         return $this->urlGenerator->generate('auth.login');
     }
