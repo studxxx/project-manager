@@ -58,7 +58,7 @@ manager-permissions:
 
 manager-clear:
 	docker run --rm -v ${PWD}/manager:/app --workdir=/app alpine rm -f .ready
-	docker run --rm -v ${PWD}/manager:/app -w /app alpine sh -c 'rm -rf var/cache/* var/log/* var/test/*'
+	docker run --rm -v ${PWD}/manager:/app -w /app alpine sh -c 'rm -rf var/cache/* var/log/* var/test/* vendor/*'
 
 manager-composer-install:
 	docker-compose run --rm manager-php-cli composer install
@@ -83,13 +83,13 @@ manager-wait-db:
 	until docker-compose exec -T manager-postgres pg_isready --timeout=0 --dbname=app ; do sleep 1 ; done
 
 manager-migrations:
-	docker-compose run --rm manager-php-cli ./bin/console doctrine:migrations:migrate --no-interaction
+	docker-compose run --rm manager-php-cli php bin/console doctrine:migrations:migrate --no-interaction
 
 manager-fixtures:
-	docker-compose run --rm manager-php-cli ./bin/console doctrine:fixtures:load --no-interaction
+	docker-compose run --rm manager-php-cli php bin/console doctrine:fixtures:load --no-interaction
 
 manager-cache-clear:
-	docker-compose run --rm manager-php-cli ./bin/console cache:clear
+	docker-compose run --rm manager-php-cli php bin/console cache:clear
 
 manager-ready:
 	docker run --rm -v ${PWD}/manager:/app --workdir=/app alpine touch .ready

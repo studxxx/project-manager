@@ -67,15 +67,25 @@ services:
       - centrifugo
     command: sh -c "until [ -f .ready ] ; do sleep 1 ; done && php bin/console messenger:consume async -vv"
   manager-node-watch:
-    image: node:12.7-alpine
+    image: node:14.21.3-alpine
     volumes:
       - ./manager:/app
+      - type: volume
+        source: node_modules
+        target: /app/node_modules
+        volume:
+          nocopy: true
     working_dir: /app
     command: sh -c "until [ -f .ready ] ; do sleep 1 ; done && npm run watch"
   manager-node:
-    image: node:12.7-alpine
+    image: node:14.21.3-alpine
     volumes:
       - ./manager:/app
+      - type: volume
+        source: node_modules
+        target: /app/node_modules
+        volume:
+          nocopy: true
     working_dir: /app
   manager-redis:
     image: redis:5.0-alpine
@@ -130,6 +140,7 @@ services:
 
 volumes:
   composer:
+  node_modules:
   manager-postgres:
   manager-queue-redis:
   manager-redis:

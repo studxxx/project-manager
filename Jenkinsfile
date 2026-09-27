@@ -2,7 +2,6 @@ pipeline {
   agent any
   environment {
     CI = 'true'
-    REGISTRY_ADDRESS = credentials("REGISTRY_ADDRESS")
     IMAGE_TAG = sh(returnStdout: true, script: "echo '${env.BUILD_TAG}' | sed 's/%2F/-/g'").trim()
   }
   stages {
@@ -34,6 +33,9 @@ pipeline {
       when {
         branch "master"
       }
+      environment {
+        REGISTRY_ADDRESS = credentials("REGISTRY_ADDRESS")
+      }
       steps {
         sh "make build"
       }
@@ -41,6 +43,9 @@ pipeline {
     stage("Push") {
       when {
         branch "master"
+      }
+      environment {
+        REGISTRY_ADDRESS = credentials("REGISTRY_ADDRESS")
       }
       steps {
         withCredentials([
@@ -58,6 +63,9 @@ pipeline {
     stage("Prod") {
       when {
         branch "master"
+      }
+      environment {
+        REGISTRY_ADDRESS = credentials("REGISTRY_ADDRESS")
       }
       steps {
         withCredentials([
